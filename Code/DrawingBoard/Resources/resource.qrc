@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>./矩形.png</file>
+        <file>./圆.png</file>
+        <file>./圆角矩形.png</file>
+        <file>./直线.png</file>
+        <file>./pen.png</file>
+    </qresource>
+</RCC>
