@@ -1,0 +1,19 @@
+log4cpp.rootCategory=ALERT, rootAppender
+log4cpp.category.CommunicationLog=DEBUG, CommunicationLog
+log4cpp.category.ConsoleLog=DEBUG, ConsoleLog
+
+log4cpp.appender.rootAppender=ConsoleAppender
+log4cpp.appender.rootAppender.threshold=ALERT
+log4cpp.appender.rootAppender.layout=PatternLayout
+log4cpp.appender.rootAppender.layout.ConversionPattern=%d [%p] %m%n 
+
+log4cpp.appender.CommunicationLog=RollingFileAppender
+log4cpp.appender.CommunicationLog.threshold=DEBUG
+log4cpp.appender.CommunicationLog.fileName=CommunicationLog.log
+log4cpp.appender.CommunicationLog.layout=PatternLayout
+log4cpp.appender.CommunicationLog.layout.ConversionPattern=%d [%p] %m%n 
+
+log4cpp.appender.ConsoleLog=ConsoleAppender
+log4cpp.appender.ConsoleLog.threshold=DEBUG
+log4cpp.appender.ConsoleLog.layout=PatternLayout
+log4cpp.appender.ConsoleLog.layout.ConversionPattern=%d [%p] %m%n 

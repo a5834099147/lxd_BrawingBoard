@@ -25,6 +25,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{1e8dfe41-af30-44ab-bf57-39786cf6d7e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{ba5d9b6f-c47c-49f5-8360-c808af0dc73e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Share\ComDataType.cpp">
@@ -40,9 +43,6 @@
       <Filter>Share</Filter>
     </ClCompile>
     <ClCompile Include="..\Share\PathManager.cpp">
-      <Filter>Share</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Share\ResourceManagers.cpp">
       <Filter>Share</Filter>
     </ClCompile>
     <ClCompile Include="Server\connectsocket.cpp">
@@ -81,6 +81,9 @@
     <ClCompile Include="Data\user-odb.cxx">
       <Filter>Data</Filter>
     </ClCompile>
+    <ClCompile Include="Manager\ResourceManagers.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Share\ComDataType.h">
@@ -101,9 +104,6 @@
     <ClInclude Include="..\Share\PathManager.h">
       <Filter>Share</Filter>
     </ClInclude>
-    <ClInclude Include="..\Share\ResourceManagers.h">
-      <Filter>Share</Filter>
-    </ClInclude>
     <ClInclude Include="..\Share\Singleton.h">
       <Filter>Share</Filter>
     </ClInclude>
@@ -118,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Data\user-odb.hxx">
       <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\ResourceManagers.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

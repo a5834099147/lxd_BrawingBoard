@@ -36,9 +36,9 @@ std::string PathManager::getExecuteDir()
     return path;
 }
 
-std::string PathManager::getLogConfigFile()
+std::string PathManager::getPlottingLogConfigFile()
 {
-    return getConfigurePath() + "log.attr";
+    return getConfigurePath() + "Plottinglog.attr";
 }
 
 PathManager& PathManager::getSingleton( void )
@@ -49,4 +49,9 @@ PathManager& PathManager::getSingleton( void )
 PathManager* PathManager::getSingletonPtr( void )
 {
     return m_Singleton;
+}
+
+std::string PathManager::getCommunicationLogComfigFile()
+{
+    return getConfigurePath() + "Communicationlog.attr";
 }

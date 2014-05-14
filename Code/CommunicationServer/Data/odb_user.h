@@ -25,7 +25,7 @@ public:
 	bool static logon(const std::string& account, const std::string& password);	
 	void static registerTheUser(const std::string& account, const std::string& password, 
 						const std::string& userName, const std::string& userNamePinyin);
-	const std::vector<User> static export();
+	const std::vector<User> static detrainment();
 	const std::vector<User> static fuzzySearch(std::string str);
 private:
 	void static initialization();

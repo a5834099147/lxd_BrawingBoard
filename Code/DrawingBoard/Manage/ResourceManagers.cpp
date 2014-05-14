@@ -40,7 +40,7 @@ ResourceManagers* ResourceManagers::getSingletonPtr()
 
 bool ResourceManagers::initiateResources()
 {
-    std::string logPath = m_pathManager->getLogConfigFile();
+    std::string logPath = m_pathManager->getPlottingLogConfigFile();
     bool bSuc = m_logManager->createLog(logPath);
 
     if (!bSuc)

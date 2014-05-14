@@ -16,7 +16,6 @@
     <ClCompile Include="..\Share\Log.cpp" />
     <ClCompile Include="..\Share\LogManager.cpp" />
     <ClCompile Include="..\Share\PathManager.cpp" />
-    <ClCompile Include="..\Share\ResourceManagers.cpp" />
     <ClCompile Include="Client\clientsocket.cpp" />
     <ClCompile Include="Client\login.cpp" />
     <ClCompile Include="Client\MyChiToLetter.cpp" />
@@ -80,6 +79,7 @@
     <ClCompile Include="GUI\mainwindow.cpp" />
     <ClCompile Include="GUI\paintwidget.cpp" />
     <ClCompile Include="GUI\userwidget.cpp" />
+    <ClCompile Include="Manage\ResourceManagers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Client\clientsocket.h">
@@ -124,7 +124,6 @@
     <ClInclude Include="..\Share\Log.h" />
     <ClInclude Include="..\Share\LogManager.h" />
     <ClInclude Include="..\Share\PathManager.h" />
-    <ClInclude Include="..\Share\ResourceManagers.h" />
     <ClInclude Include="..\Share\Singleton.h" />
     <ClInclude Include="..\Share\SmartPointer.h" />
     <ClInclude Include="Client\MyChiToLetter.h" />
@@ -134,6 +133,7 @@
     <ClInclude Include="DrawAndMeasurement\rect.h" />
     <ClInclude Include="DrawAndMeasurement\round.h" />
     <ClInclude Include="DrawAndMeasurement\roundrect.h" />
+    <ClInclude Include="Manage\ResourceManagers.h" />
     <CustomBuild Include="GUI\userwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing userwidget.h...</Message>
@@ -223,15 +223,15 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Output\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Output\</OutDir>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Client;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(IncludePath)</IncludePath>
     <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ReferencePath)</ReferencePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
-    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\log4cpp\bin\Release;D:\Program Files\Libxl\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\log4cpp\include;D:\Program Files\Libxl\include_cpp;D:\Program Files\ODB\apply\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
-    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\log4cpp\bin\Release;D:\Program Files\Libxl\bin;D:\Program Files\ODB\apply\bin;$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\log4cpp\lib;D:\Program Files\Libxl\lib;D:\Program Files\ODB\apply\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(IncludePath)</IncludePath>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ReferencePath)</ReferencePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

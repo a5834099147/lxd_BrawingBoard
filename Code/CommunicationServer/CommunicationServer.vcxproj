@@ -16,7 +16,6 @@
     <ClCompile Include="..\Share\Log.cpp" />
     <ClCompile Include="..\Share\LogManager.cpp" />
     <ClCompile Include="..\Share\PathManager.cpp" />
-    <ClCompile Include="..\Share\ResourceManagers.cpp" />
     <ClCompile Include="Data\odb_user.cpp" />
     <ClCompile Include="Data\user-odb.cxx" />
     <ClCompile Include="GeneratedFiles\Debug\moc_connectsocket.cpp">
@@ -37,6 +36,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_serverthread.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Manager\ResourceManagers.cpp" />
     <ClCompile Include="Server\connectsocket.cpp" />
     <ClCompile Include="Server\main.cpp" />
     <ClCompile Include="Server\serversocket.cpp" />
@@ -49,12 +49,12 @@
     <ClInclude Include="..\Share\Log.h" />
     <ClInclude Include="..\Share\LogManager.h" />
     <ClInclude Include="..\Share\PathManager.h" />
-    <ClInclude Include="..\Share\ResourceManagers.h" />
     <ClInclude Include="..\Share\Singleton.h" />
     <ClInclude Include="..\Share\SmartPointer.h" />
     <ClInclude Include="Data\odb_user.h" />
     <ClInclude Include="Data\user-odb.hxx" />
     <ClInclude Include="Data\user.hxx" />
+    <ClInclude Include="Manager\ResourceManagers.h" />
     <CustomBuild Include="Server\serverthread.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing serverthread.h...</Message>
@@ -119,13 +119,16 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Output\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\ODB\apply\include;$(IncludePath)</IncludePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Output\</OutDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Sqlite3;$(SolutionDir)Dependencies\ODB;$(SolutionDir)Dependencies;$(ProjectDir)Server;$(ProjectDir)Data;$(ProjectDir)Manager;$(IncludePath)</IncludePath>
     <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ReferencePath)</ReferencePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Program Files\ODB\apply\lib;D:\UsingLib\STLport\lib;D:\UsingLib\Boost\stage\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Sqlite3;$(SolutionDir)Dependencies\ODB;$(SolutionDir)Dependencies;$(ProjectDir)Server;$(ProjectDir)Data;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Sqlite3;$(SolutionDir)Dependencies\ODB;$(SolutionDir)Dependencies;$(ProjectDir)Server;$(ProjectDir)Data;$(ProjectDir)Manager;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ReferencePath)</ReferencePath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)_Release</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,7 +162,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtNetwork4.lib;odb-sqlite.lib;odb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtNetwork4.lib;odb-sqlite.lib;ws2_32.lib;odb.lib;log4cppLIB.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

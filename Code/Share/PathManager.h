@@ -20,8 +20,11 @@ public:
     static PathManager* getSingletonPtr(void);
 
 public:
-    ///< 获得日志配置文件路径
-    std::string getLogConfigFile();
+    ///< 获得绘图工作区日志配置文件路径
+    std::string getPlottingLogConfigFile();
+
+    ///< 获取服务器工作区日志配置文件路径
+    std::string getCommunicationLogComfigFile();
 
 private:
     ///< 获取配置文件路径

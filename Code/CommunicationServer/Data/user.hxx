@@ -4,6 +4,8 @@
 #include <odb/core.hxx>
 #include <string>
 
+#pragma  warning(disable:4068)
+
 #pragma db object
 class User
 {

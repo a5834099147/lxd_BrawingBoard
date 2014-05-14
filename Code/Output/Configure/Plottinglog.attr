@@ -1,0 +1,12 @@
+log4cpp.rootCategory=DEBUG, rootAppender
+log4cpp.category.sub2=DEBUG, PlottingLog
+
+log4cpp.appender.rootAppender=ConsoleAppender
+log4cpp.appender.rootAppender.layout=PatternLayout
+log4cpp.appender.rootAppender.layout.ConversionPattern=%d [%p] %m%n 
+
+log4cpp.appender.PlottingLog=RollingFileAppender
+log4cpp.appender.PlottingLog.threshold=DEBUG
+log4cpp.appender.PlottingLog.fileName=PlottingLog.log
+log4cpp.appender.PlottingLog.layout=PatternLayout
+log4cpp.appender.PlottingLog.layout.ConversionPattern=%d [%p] %m%n 

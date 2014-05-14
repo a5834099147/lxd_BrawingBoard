@@ -20,7 +20,7 @@ signals:
 
 protected:
     void requestLandingData(ComDataType* data);
-    void requestSendMessage_Message(ComDataType* data);	
+    void requestSendMessage_Message(ComDataType* data);
     void requestSendMessage_Data(ComDataType* data);
     void requestRegister(ComDataType* data);
 
@@ -28,10 +28,11 @@ protected:
 
     void sandLogin_result(bool result);
     void sandRigister_result(bool reslut);
-    void sandUserList(std::string account, std::string userName, std::string userPinyin, char on_line, char replace);
+    void sandUserList(std::string account, std::string userName, 
+                      std::string userPinyin, bool on_line);
 
-    private slots:
-        void receiveData();
+private slots:
+    void receiveData();
 
 private:
     void sandData(ComDataType* data);

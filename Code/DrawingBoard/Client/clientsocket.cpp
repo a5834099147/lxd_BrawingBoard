@@ -2,6 +2,7 @@
 #include "ComDataType.h"
 
 #include <boost/lexical_cast.hpp>
+#include <cassert>
 #include <QtNetwork/QHostAddress>
 #include <string>
 
@@ -176,6 +177,11 @@ void ClientSocket::receiveData()
                 LogManager::getSingleton().logDebug("交由数据表处理函数处理数据表信息");
                 requestUserList(com);
                 break; 
+            }
+        default:
+            {
+                LogManager::getSingleton().logError("收到非法消息类型");
+                assert(false);
             }
         }
     }

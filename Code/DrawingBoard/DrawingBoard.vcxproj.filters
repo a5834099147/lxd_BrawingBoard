@@ -33,6 +33,9 @@
     <Filter Include="Share">
       <UniqueIdentifier>{43affb75-c8a2-4726-9a17-f63454233990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{6b520373-b389-45b5-bf92-3eea6c6da6e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client\clientsocket.cpp">
@@ -137,11 +140,11 @@
     <ClCompile Include="..\Share\PathManager.cpp">
       <Filter>Share</Filter>
     </ClCompile>
-    <ClCompile Include="..\Share\ResourceManagers.cpp">
-      <Filter>Share</Filter>
-    </ClCompile>
     <ClCompile Include="Client\MyChiToLetter.cpp">
       <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="Manage\ResourceManagers.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +210,6 @@
     <ClInclude Include="..\Share\PathManager.h">
       <Filter>Share</Filter>
     </ClInclude>
-    <ClInclude Include="..\Share\ResourceManagers.h">
-      <Filter>Share</Filter>
-    </ClInclude>
     <ClInclude Include="..\Share\Singleton.h">
       <Filter>Share</Filter>
     </ClInclude>
@@ -218,6 +218,9 @@
     </ClInclude>
     <ClInclude Include="Client\MyChiToLetter.h">
       <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Manage\ResourceManagers.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
