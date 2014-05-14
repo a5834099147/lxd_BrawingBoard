@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Share">
+      <UniqueIdentifier>{5e7429fb-b189-47f6-873d-58b973f11970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{33558e85-a650-42f1-ad85-75f7bf7f8278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{e71d669d-6baf-4869-a59c-77b214d117b6}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{0c4652ad-6090-4471-9d27-0ae5bf75615c}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{1e8dfe41-af30-44ab-bf57-39786cf6d7e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Share\ComDataType.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\ComDataTypeFactory.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\Log.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\LogManager.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\PathManager.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\ResourceManagers.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\connectsocket.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_connectsocket.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_connectsocket.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\main.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\serversocket.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_serversocket.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_serversocket.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Server\serverthread.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_serverthread.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_serverthread.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\odb_user.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\user-odb.cxx">
+      <Filter>Data</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Share\ComDataType.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\ComDataTypeFactory.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\common.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\Log.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\LogManager.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\PathManager.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\ResourceManagers.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\Singleton.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\SmartPointer.h">
+      <Filter>Share</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\odb_user.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\user.hxx">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\user-odb.hxx">
+      <Filter>Data</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Server\connectsocket.h">
+      <Filter>Server</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Server\serversocket.h">
+      <Filter>Server</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Server\serverthread.h">
+      <Filter>Server</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\user-odb.ixx">
+      <Filter>Data</Filter>
+    </None>
+  </ItemGroup>
+</Project>
