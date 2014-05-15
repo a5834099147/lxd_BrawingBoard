@@ -45,38 +45,7 @@ void ConnectSocket::receiveData()
     ComDataType* com = comDataFactory.createComData(msgType);
     com->setData(receive);
 
-    switch(msgType)
-    {
-    case MT_LANDING_DATA:
-        {
-            LogManager::getSingleton().logDebug("将收到的信息交由登陆处理函数处理");
-            requestLandingData(com);
-            break;
-        }
-    case MT_SENDMESSAGE_MESSAGE:
-        {
-            LogManager::getSingleton().logDebug("将收到的消息交由接受消息函数处理");
-            requestSendMessage_Message(com);
-            break;
-        }
-    case MT_SENDMESSAGE_DATA:
-        {
-            LogManager::getSingleton().logDebug("将收到的消息交由接受数据函数处理");
-            requestSendMessage_Data(com);
-            break;
-        }
-    case MT_REGISTER_DATA:
-        {
-            LogManager::getSingleton().logDebug("将收到的消息交由注册处理函数处理");
-            requestRegister(com);
-            break;
-        }
-    default:
-        {
-            LogManager::getSingleton().logDebug("收到非法消息类型");
-            assert(false);
-        }
-    }
+    receiveDataProcessing(msgType, com);
 }
 
 void ConnectSocket::requestLandingData(ComDataType* data)
@@ -94,6 +63,11 @@ void ConnectSocket::requestLandingData(ComDataType* data)
     bool result = odb_user::logon(landingData->getAccount().toStdString(), 
                                   landingData->getPassword().toStdString());	
     sandLogin_result(result);
+
+    if (result)
+    {
+        emit login(landingData->getAccount());
+    }
 
     delete data;
     data = NULL;
@@ -121,11 +95,11 @@ void ConnectSocket::requestRegister(ComDataType* data)
         assert(false);
     }
 
-    odb_user::registerTheUser(registerData->getAccount().toStdString(), 
+    bool isOk = odb_user::registerTheUser(registerData->getAccount().toStdString(), 
                               registerData->getPassword().toStdString(),
                               registerData->getUserName().toStdString(),
                               registerData->getSpelling().toStdString());
-    sandRigister_result(true);
+    sandRigister_result(isOk);
 
     delete data;
     data = NULL;
@@ -183,11 +157,12 @@ void ConnectSocket::requestUserList()
     std::vector<User> user_v = odb_user::detrainment();
     for (std::vector<User>::iterator it = user_v.begin(); it != user_v.end(); ++it)
     {
-        sandUserList(it->Account(), it->UserName(), it->UserNamePinyin(), 1);
+        sandUserList(it->Account(), it->UserName(), it->UserNamePinyin(), false, false);
     }
 }
 
-void ConnectSocket::sandUserList(std::string account, std::string userName, std::string userPinyin, bool on_line)
+void ConnectSocket::sandUserList(std::string account, std::string userName, 
+                                 std::string userPinyin, bool on_line, bool isUpdate)
 {
 
     ///< 创建信息注册实体
@@ -207,6 +182,7 @@ void ConnectSocket::sandUserList(std::string account, std::string userName, std:
     returnTheListData->setUserName(userName.c_str());
     returnTheListData->setSpelling(userPinyin.c_str());
     returnTheListData->setOnLine(on_line);
+    returnTheListData->setIsUpdate(isUpdate);
 
     sandData(com);
 }
@@ -244,5 +220,58 @@ void ConnectSocket::sandData(ComDataType* data)
     ///< 删除消息
     delete data;
     data = NULL;
+}
+
+void ConnectSocket::requestChatRequest( ComDataType* data )
+{
+
+}
+
+void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
+{
+    switch(type)
+    {
+    case MT_LANDING_DATA:
+        {
+            LogManager::getSingleton().logDebug("将收到的信息交由登陆处理函数处理");
+            requestLandingData(data);
+            break;
+        }
+    case MT_SENDMESSAGE_MESSAGE:
+        {
+            LogManager::getSingleton().logDebug("将收到的消息交由接受消息函数处理");
+            requestSendMessage_Message(data);
+            break;
+        }
+    case MT_SENDMESSAGE_DATA:
+        {
+            LogManager::getSingleton().logDebug("将收到的消息交由接受数据函数处理");
+            requestSendMessage_Data(data);
+            break;
+        }
+    case MT_REGISTER_DATA:
+        {
+            LogManager::getSingleton().logDebug("将收到的消息交由注册处理函数处理");
+            requestRegister(data);
+            break;
+        }
+    case MT_CHATREQUESTS_DATA:
+        {
+            LogManager::getSingleton().logDebug("将收到的消息交由聊天请求处理函数处理");
+            requestChatRequest(data);
+            break;
+        }
+    default:
+        {
+            LogManager::getSingleton().logDebug("收到非法消息类型");
+            assert(false);
+        }
+    }
+}
+
+void ConnectSocket::updataTheList( QString& account, bool state )
+{
+    LogManager::getSingleton().logDebug("发送更新用户名:" + account.toStdString() + "的状态为" + (state ? "在线": "不在线"));
+    sandUserList(account.toStdString(), "", "", state, true);
 }
 

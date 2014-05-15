@@ -252,7 +252,8 @@ void ClientSocket::requestUserList(ComDataType* data)
     emit recive_userList(returnTheListData->getAccount().toStdString(),
                          returnTheListData->getUserName().toStdString(),
                          returnTheListData->getSpelling().toStdString(),
-                         returnTheListData->getOnLine());
+                         returnTheListData->getOnLine(),
+                         returnTheListData->getIsUpdate());
 
     delete data;
     data = NULL;

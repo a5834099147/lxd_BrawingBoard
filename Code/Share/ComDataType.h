@@ -14,6 +14,7 @@
 
 #include "common.h"
 
+///< 基类
 class ComDataType
 {
 public:
@@ -25,21 +26,11 @@ public:
     void virtual getData(QDataStream &dataStream) = 0;
     void virtual setData(QDataStream &dataStream) = 0;
 
-public:
-    const MsgType& getMsgType(void)
-    {
-        return m_msgType;
-    }
-
-    void setMsgType(MsgType msgType)
-    {
-        m_msgType = msgType;
-    }
-
 protected:
     MsgType m_msgType;
 };
 
+///< 登陆请求数据
 class LandingDataType : public ComDataType
 {
 public:
@@ -52,7 +43,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const QString& getAccount(void)
+    const QString& getAccount(void) const
     {
         return m_account;
     }
@@ -62,7 +53,7 @@ public:
         m_account = account;
     }
 
-    const QString& getPassword(void)
+    const QString& getPassword(void) const
     {
         return m_password;
     }
@@ -77,6 +68,7 @@ private:
     QString m_password;
 };
 
+///< 登陆请求结果
 class LandingResultType : public ComDataType
 {
 public:
@@ -89,7 +81,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const bool getResult(void)
+    const bool getResult(void) const
     {
         return m_result;
     }
@@ -103,6 +95,7 @@ private:
     bool m_result;
 };
 
+///< 注册请求数据
 class RegisterDataType : public ComDataType
 {
 public:
@@ -115,7 +108,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const QString& getAccount(void)
+    const QString& getAccount(void) const
     {
         return m_account;
     }
@@ -125,7 +118,7 @@ public:
         m_account = account;
     }
 
-    const QString& getPassword(void)
+    const QString& getPassword(void) const
     {
         return m_password;
     }
@@ -135,7 +128,7 @@ public:
         m_password = password;
     }
 
-    const QString& getUserName(void)
+    const QString& getUserName(void) const
     {
         return m_userName;
     }
@@ -145,7 +138,7 @@ public:
         m_userName = userName;
     }
 
-    const QString& getSpelling(void)
+    const QString& getSpelling(void) const
     {
         return m_spelling;
     }
@@ -162,6 +155,7 @@ private:
     QString m_spelling;
 };
 
+///< 注册请求结果
 class RegisterResultType : public ComDataType
 {
 public:
@@ -174,7 +168,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const bool getResult(void)
+    const bool getResult(void) const
     {
         return m_result;
     }
@@ -188,11 +182,13 @@ private:
     bool m_result;
 };
 
+///< 列表返回
 class ReturnTheListDataType : public ComDataType
 {
 public:
     ReturnTheListDataType(void);
-    ReturnTheListDataType(QString account, QString userName, QString spelling, bool onLine);
+    ReturnTheListDataType(QString account, QString userName, QString spelling,
+                          bool onLine, bool isUpdate);
 
     ~ReturnTheListDataType(void);
 
@@ -200,7 +196,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const QString& getAccount(void)
+    const QString& getAccount(void) const
     {
         return m_account;
     }
@@ -210,7 +206,7 @@ public:
         m_account = account;
     }
 
-    const QString& getUserName(void)
+    const QString& getUserName(void) const
     {
         return m_userName;
     }
@@ -220,7 +216,7 @@ public:
         m_userName = userName;
     }
 
-    const QString& getSpelling(void)
+    const QString& getSpelling(void) const
     {
         return m_spelling;
     }
@@ -230,7 +226,7 @@ public:
         m_spelling = spelling;
     }
 
-    const bool getOnLine(void)
+    const bool getOnLine(void) const
     {
         return m_onLine;
     }
@@ -240,6 +236,16 @@ public:
         m_onLine = onLine;
     }
 
+    const bool getIsUpdate(void) const
+    {
+        return m_isUpdate;
+    }
+
+    void setIsUpdate(bool isUpdate)
+    {
+        m_isUpdate = isUpdate;
+    }
+
 private:
     QString m_account;
     QString m_userName;
@@ -247,8 +253,11 @@ private:
 
     ///< 是否在线
     bool m_onLine;
+    ///< 是否为更新
+    bool m_isUpdate;
 };
 
+///< 发送消息
 class SandMessageType : public ComDataType
 {
 public:
@@ -261,7 +270,7 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const QString& getAccount(void)
+    const QString& getAccount(void) const
     {
         return m_account;
     }
@@ -271,7 +280,7 @@ public:
         m_account = account;
     }
 
-    const QString& getUserName(void)
+    const QString& getUserName(void) const
     {
         return m_userName;
     }
@@ -281,7 +290,7 @@ public:
         m_userName = userName;
     }
 
-    const QString& getMessage(void)
+    const QString& getMessage(void) const
     {
         return m_message;
     }
@@ -297,6 +306,107 @@ private:
     QString m_message;
 };
 
+///< 聊天请求
+class ChatRequestDataType : public ComDataType
+{
+public:
+    ChatRequestDataType(void);
+    ChatRequestDataType(QString localAccount, QString localUserName, 
+                        QString otherAccount, QString otherUserName);
+
+     ~ChatRequestDataType(void);
+
+    void getData(QDataStream &dataStream);
+    void setData(QDataStream &dataStream);
+
+public:
+    const QString& getLocalAccount() const
+    {
+        return m_localAccount;
+    }
+    void setLocalAccount(QString val)
+    {
+        m_localAccount = val;
+    }
+
+    const QString& getLocalUserName() const
+    {
+        return m_localUserName;
+    }
+    void setLocalUserName(QString val)
+    {
+        m_localUserName = val;
+    }
+
+    const QString& getOtherAccount() const
+    {
+        return m_otherAccount;
+    }
+    void setOtherAccount(QString val)
+    {
+        m_otherAccount = val;
+    }
+
+    const QString& getOtherUserName() const
+    {
+        return m_otherUserName;
+    }
+    void setOtherUserName(QString val)
+    {
+        m_otherUserName = val;
+    }
+
+private:
+    QString m_localAccount;
+    QString m_localUserName;
+    QString m_otherAccount;
+    QString m_otherUserName;
+};
+
+///< 聊天请求结果
+class ChatRequestResultType : public ComDataType
+{
+public:
+    ChatRequestResultType(void);
+    ChatRequestResultType(QString account, QString userName, bool result);
+
+    ~ChatRequestResultType(void);
+
+    void virtual getData( QDataStream &dataStream );
+    void virtual setData( QDataStream &dataStream );
+
+public:
+    bool getResult() const
+    {
+        return m_result; 
+    }
+    void setResult(bool val) {
+        m_result = val;
+    }
+
+    QString getAccount() const
+    {
+        return m_account;
+    }
+    void setAccount(QString val)
+    {
+        m_account = val;
+    }
+
+    QString getUserName() const
+    {
+        return m_userName;
+    }
+    void setUserName(QString val)
+    {
+        m_userName = val;
+    }
+
+private:
+    bool m_result;
+    QString m_account;
+    QString m_userName;
+};
 
 
 #endif  ///<__COMDATATYPE_H__

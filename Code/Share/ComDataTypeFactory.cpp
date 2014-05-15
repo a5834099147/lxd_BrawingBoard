@@ -54,6 +54,18 @@ ComDataType* ComDataTypeFactory::createComData( MsgType msgType )
             comDataType = new SandMessageType();
             break;
         }
+    case MT_CHATREQUESTS_DATA:
+        {
+            LogManager::getSingleton().logDebug("创建一个聊天请求消息");
+            comDataType = new ChatRequestDataType();
+            break;
+        }
+    case MT_CHATREQUESTS_RESULT:
+        {
+            LogManager::getSingleton().logDebug("创建一个聊天请求结果消息");
+            comDataType = new ChatRequestResultType();
+            break;
+        }
     default:
         {
             LogManager::getSingleton().logError("出现非法创建消息");

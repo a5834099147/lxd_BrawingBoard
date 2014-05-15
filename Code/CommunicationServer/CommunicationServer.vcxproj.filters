@@ -84,6 +84,9 @@
     <ClCompile Include="Manager\ResourceManagers.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Server\CustomEventType.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Share\ComDataType.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="Manager\ResourceManagers.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Server\CustomEventType.h">
+      <Filter>Server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

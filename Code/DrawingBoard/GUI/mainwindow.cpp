@@ -420,8 +420,8 @@ void MainWindow::CreatConnect()
         this, SLOT(sand_register(std::string, std::string, std::string, std::string))); 
 
     /* 用户列表下放*/
-    connect(socket_, SIGNAL(recive_userList(std::string, std::string, std::string, bool)),
-        userWidget_, SLOT(insertUserList(std::string, std::string, std::string, bool)));
+    connect(socket_, SIGNAL(recive_userList(std::string, std::string, std::string, bool, bool)),
+        userWidget_, SLOT(contentChanges(std::string, std::string, std::string, bool, bool)));
 }
 
 void MainWindow::on_openAction_triggered()

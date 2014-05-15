@@ -38,6 +38,7 @@
     </ClCompile>
     <ClCompile Include="Manager\ResourceManagers.cpp" />
     <ClCompile Include="Server\connectsocket.cpp" />
+    <ClCompile Include="Server\CustomEventType.cpp" />
     <ClCompile Include="Server\main.cpp" />
     <ClCompile Include="Server\serversocket.cpp" />
     <ClCompile Include="Server\serverthread.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Data\user-odb.hxx" />
     <ClInclude Include="Data\user.hxx" />
     <ClInclude Include="Manager\ResourceManagers.h" />
+    <ClInclude Include="Server\CustomEventType.h" />
     <CustomBuild Include="Server\serverthread.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing serverthread.h...</Message>

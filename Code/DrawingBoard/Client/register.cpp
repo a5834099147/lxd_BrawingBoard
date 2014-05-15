@@ -75,7 +75,7 @@ void Register::on_register_recive(bool result)
     }
     else 
     {
-        if (QMessageBox::critical(NULL, "注册", "您输入的账号和密码组合已被占用，请重新输入",
+        if (QMessageBox::critical(NULL, "注册", "您输入的账号已被占用，请重新输入",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No)
         {
             reject();
@@ -104,7 +104,7 @@ void Register::on_registerB_clicked()
         chiToLetter.m_blnAllBiG = false;
         chiToLetter.m_blnSimaple = true;
         chiToLetter.m_LetterEnd = false;
-        string userNamePinyin = chiToLetter.GetLetter(userName);	
+        string userNamePinyin = chiToLetter.GetLetter(userName);
 
         emit sand_register(account, password, userName, userNamePinyin);
     }

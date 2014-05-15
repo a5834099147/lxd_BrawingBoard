@@ -10,13 +10,12 @@ ComDataType::ComDataType(void)
 ComDataType::ComDataType( MsgType msgType )
     :m_msgType(msgType)
 {
-
 }
 
-ComDataType::~ComDataType(void)
+ComDataType::~ComDataType( void )
 {
-}
 
+}
 
 ///< LANDINGDATATYPE
 LandingDataType::LandingDataType( QString account, QString password )
@@ -143,12 +142,13 @@ void RegisterResultType::setData( QDataStream &dataStream )
 
 
 ///< RETURNTHELISTDATATYPE
-ReturnTheListDataType::ReturnTheListDataType( QString account, QString userName, QString spelling, bool onLine )
+ReturnTheListDataType::ReturnTheListDataType( QString account, QString userName, QString spelling, bool onLine, bool isUpdate )
     : ComDataType(MT_RETURNTHELIST_DATA),
     m_account(account),
     m_userName(userName),
     m_spelling(spelling),
-    m_onLine(onLine)
+    m_onLine(onLine),
+    m_isUpdate(isUpdate)
 {
 
 }
@@ -166,12 +166,13 @@ ReturnTheListDataType::~ReturnTheListDataType( void )
 
 void ReturnTheListDataType::getData( QDataStream &dataStream )
 {
-    dataStream << (qint32)m_msgType << m_account << m_userName << m_spelling << m_onLine;
+    dataStream << (qint32)m_msgType << m_account << m_userName << m_spelling 
+               << m_onLine << m_isUpdate;
 }
 
 void ReturnTheListDataType::setData( QDataStream &dataStream )
 {
-    dataStream >> m_account >> m_userName >> m_spelling >> m_onLine;
+    dataStream >> m_account >> m_userName >> m_spelling >> m_onLine >> m_isUpdate;
 }
 
 
@@ -205,4 +206,73 @@ void SandMessageType::setData( QDataStream &dataStream )
 {
     dataStream >> m_account >> m_userName >> m_message;
 }
+
+///< CHATREQUESTSDATA
+ChatRequestDataType::ChatRequestDataType( void )
+    :ComDataType(MT_CHATREQUESTS_DATA)
+{
+
+}
+
+ChatRequestDataType::ChatRequestDataType( QString localAccount, QString localUserName, QString otherAccount, QString otherUserName )
+    :ComDataType(MT_CHATREQUESTS_DATA),
+    m_localAccount(localAccount),
+    m_localUserName(localUserName),
+    m_otherAccount(otherAccount),
+    m_otherUserName(otherUserName)
+{
+
+}
+
+ChatRequestDataType::~ChatRequestDataType( void )
+{
+
+}
+
+
+void ChatRequestDataType::getData( QDataStream &dataStream )
+{
+    dataStream << (qint32)m_msgType << m_localAccount << m_localUserName
+               << m_otherAccount << m_otherUserName;
+}
+
+void ChatRequestDataType::setData( QDataStream &dataStream )
+{
+    dataStream >> m_localAccount >> m_localUserName 
+               >> m_otherAccount >> m_otherUserName;
+}
+
+
+///< CHARTQUESTRESULT
+ChatRequestResultType::ChatRequestResultType( void )
+    :ComDataType(MT_CHATREQUESTS_RESULT)
+{
+
+}
+
+ChatRequestResultType::ChatRequestResultType( QString account, QString userName, bool result )
+    :ComDataType(MT_CHATREQUESTS_RESULT),
+    m_account(account),
+    m_userName(userName),
+    m_result(result)
+{
+
+}
+
+ChatRequestResultType::~ChatRequestResultType( void )
+{
+
+}
+
+void ChatRequestResultType::getData( QDataStream &dataStream )
+{
+    dataStream << (qint32)m_msgType << m_account << m_userName << m_result;
+}
+
+void ChatRequestResultType::setData( QDataStream &dataStream )
+{
+    dataStream >> m_account >> m_userName >> m_result;
+}
+
+
 

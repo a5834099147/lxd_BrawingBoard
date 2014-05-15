@@ -19,12 +19,14 @@ public:
 signals:
     void recive_login(bool);
     void recive_register(bool);
-    void recive_userList(std::string account, std::string userName, std::string userPinyin, bool on_line);
+    void recive_userList(std::string account, std::string userName, 
+         std::string userPinyin, bool on_line, bool isUpdate);
 
 public:
     bool connectToServer(const char* ip, quint16 port);
     void sandMessage_Message(std::string meg);
-    void sandRegister(std::string account, std::string password, std::string userName, std::string pinYin);
+    void sandRegister(std::string account, std::string password, 
+                      std::string userName, std::string pinYin);
     void landing_Data(std::string accoutn, std::string password);
 
 private:
