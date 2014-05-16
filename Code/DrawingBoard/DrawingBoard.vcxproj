@@ -16,6 +16,7 @@
     <ClCompile Include="..\Share\Log.cpp" />
     <ClCompile Include="..\Share\LogManager.cpp" />
     <ClCompile Include="..\Share\PathManager.cpp" />
+    <ClCompile Include="Chat\chat.cpp" />
     <ClCompile Include="Client\clientsocket.cpp" />
     <ClCompile Include="Client\login.cpp" />
     <ClCompile Include="Client\MyChiToLetter.cpp" />
@@ -27,6 +28,9 @@
     <ClCompile Include="DrawAndMeasurement\round.cpp" />
     <ClCompile Include="DrawAndMeasurement\roundrect.cpp" />
     <ClCompile Include="DrawAndMeasurement\shape.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_chat.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_clientsocket.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -53,6 +57,9 @@
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_chat.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_clientsocket.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -126,6 +133,16 @@
     <ClInclude Include="..\Share\PathManager.h" />
     <ClInclude Include="..\Share\Singleton.h" />
     <ClInclude Include="..\Share\SmartPointer.h" />
+    <CustomBuild Include="Chat\chat.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing chat.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\Client"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing chat.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\Client"</Command>
+    </CustomBuild>
     <ClInclude Include="Client\MyChiToLetter.h" />
     <ClInclude Include="DrawAndMeasurement\GraphFactory.h" />
     <ClInclude Include="DrawAndMeasurement\line.h" />
@@ -133,6 +150,7 @@
     <ClInclude Include="DrawAndMeasurement\rect.h" />
     <ClInclude Include="DrawAndMeasurement\round.h" />
     <ClInclude Include="DrawAndMeasurement\roundrect.h" />
+    <ClInclude Include="GeneratedFiles\ui_chat.h" />
     <ClInclude Include="Manage\ResourceManagers.h" />
     <CustomBuild Include="GUI\userwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -178,20 +196,29 @@
   <ItemGroup>
     <CustomBuild Include="Resources\resource.qrc">
       <FileType>Document</FileType>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FullPath);.\Resources\Resources\矩形.png;.\Resources\Resources\圆.png;.\Resources\Resources\圆角矩形.png;.\Resources\Resources\直线.png;.\Resources\Resources\pen.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FullPath);.\Resources\矩形.png;.\Resources\圆.png;.\Resources\圆角矩形.png;.\Resources\直线.png;.\Resources\pen.png;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Rcc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FullPath);.\Resources\Resources\矩形.png;.\Resources\Resources\圆.png;.\Resources\Resources\圆角矩形.png;.\Resources\Resources\直线.png;.\Resources\Resources\pen.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FullPath);.\Resources\矩形.png;.\Resources\圆.png;.\Resources\圆角矩形.png;.\Resources\直线.png;.\Resources\pen.png;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Rcc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
     </CustomBuild>
-    <None Include="Resources\pen.png" />
-    <None Include="Resources\圆.png" />
-    <None Include="Resources\圆角矩形.png" />
-    <None Include="Resources\直线.png" />
-    <None Include="Resources\矩形.png" />
+    <CustomBuild Include="Chat\chat.ui">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="Chat\resource.qrc">
+      <FileType>Document</FileType>
+    </CustomBuild>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5A5E7BCA-B8E2-47D5-ADD0-B668FD476711}</ProjectGuid>
@@ -225,11 +252,11 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Output\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Output\</OutDir>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(ProjectDir)Chat;$(IncludePath)</IncludePath>
     <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ReferencePath)</ReferencePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\DLL;$(ExecutablePath)</ExecutablePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Share;$(SolutionDir)Dependencies\Log4Cpp;$(SolutionDir)Dependencies\Libxl;$(SolutionDir)Dependencies;$(ProjectDir)DrawAndMeasurement;$(ProjectDir)GUI;$(ProjectDir)Manage;$(ProjectDir)Client;$(ProjectDir)Chat;$(IncludePath)</IncludePath>
     <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ReferencePath)</ReferencePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Dependencies\LIB;$(LibraryPath)</LibraryPath>
   </PropertyGroup>

@@ -70,5 +70,17 @@ void ServerThread::customEvent( QEvent *event )
         ChatRequestResult* tarEvent = static_cast<ChatRequestResult*>(event);
         m_sock->sendRequestChatRequest(tarEvent->getUserName(), tarEvent->getResult());
     }
+    else if (event->type() == (QEvent::User + ET_OPENCHATPORT))
+    {
+        LogManager::getSingleton().logDebug("线程: " +
+                 boost::lexical_cast<std::string>(m_sock_fd) + "收到聊天端口打开命令");
+        OpenChatPort* tarEvent = static_cast<OpenChatPort*>(event);
+        m_sock->sendOpenChatPort(tarEvent->getUserName(), tarEvent->getAddress(), 
+                tarEvent->getLocalPort(), tarEvent->getTargetPort());
+    }
+}
 
+QString ServerThread::getPeerAddress()
+{
+    return m_sock->getPeerAddress();
 }

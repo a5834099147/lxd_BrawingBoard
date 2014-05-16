@@ -28,6 +28,9 @@ private slots:
     void chatRequestResult(const QString& account, bool result);
 
 private:
+    void getPort(quint32& port1, quint32& port2);
+
+private:
     ///< ¶Ë¿ÚºÅ
     quint16 m_port;
     ///< »¥³âËø
@@ -38,6 +41,8 @@ private:
     QHash<QString, ServerThread*> m_userHash;
     ///< Ïß³Ì±àºÅ
     static quint32 thrd_fd_;
+    ///< ¶Ë¿ÚÊý
+    static quint32 port_fd_;
 };
 
 #endif // SERVERSOCKET_H

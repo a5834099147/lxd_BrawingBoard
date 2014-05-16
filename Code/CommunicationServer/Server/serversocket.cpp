@@ -9,6 +9,7 @@
 #include <cassert>
 
 quint32 ServerSocket::thrd_fd_ = 0;
+quint32 ServerSocket::port_fd_ = 49152;
 
 ServerSocket::ServerSocket(quint16 port, QObject *parent)
     : QTcpServer(parent), m_port(port)
@@ -213,4 +214,24 @@ void ServerSocket::chatRequestResult( const QString& account, bool result )
     }
 
     QCoreApplication::postEvent(targetThread, new ChatRequestResult(requestAccount, result));
+
+    if (result)
+    {
+        ///< 获得两个通信端口
+        quint32 port1, port2;
+        getPort(port1, port2);
+
+        QString userIpFirst, userIpSecond;
+        userIpFirst = thread->getPeerAddress();
+        userIpSecond = targetThread->getPeerAddress();
+
+        QCoreApplication::postEvent(targetThread, new OpenChatPort(userIpFirst, requestAccount, port1, port2));
+        QCoreApplication::postEvent(thread, new OpenChatPort(userIpSecond, account, port2, port1));
+    }
+}
+
+void ServerSocket::getPort( quint32& port1, quint32& port2 )
+{
+    port1 = ++port_fd_;
+    port2 = ++port_fd_;
 }

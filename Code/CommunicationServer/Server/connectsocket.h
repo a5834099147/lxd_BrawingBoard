@@ -19,6 +19,9 @@ public:
     void updataTheList(QString& account, bool state);
     void sendChatRequest(QString& account);
     void sendRequestChatRequest(QString& account, bool result);
+    QString getPeerAddress();
+    void sendOpenChatPort(QString userName, QString targAddress, 
+        quint32 localPort, quint32 targPort);
 
 signals:
     void closing(int sockfd);
@@ -46,7 +49,6 @@ private:
     void sandRigister_result(bool reslut);
     void sandUserList(std::string account, std::string userName, 
         std::string userPinyin, bool on_line, bool isUpdate);
-
 private:
     ComDataTypeFactory comDataFactory;
 };

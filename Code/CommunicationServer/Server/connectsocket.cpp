@@ -138,6 +138,11 @@ void ConnectSocket::sandLogin_result(bool result)
     }
 }
 
+QString ConnectSocket::getPeerAddress()
+{
+    return peerAddress().toString();
+}
+
 void ConnectSocket::sandRigister_result(bool reslut)
 {
 
@@ -214,6 +219,32 @@ void ConnectSocket::sendChatRequest( QString& account )
 
     sandData(com);
 }
+
+void ConnectSocket::sendOpenChatPort( QString userName, QString targAddress,
+    quint32 localPort, quint32 targPort )
+{
+
+    ///< 创建信息注册实体
+    ComDataType* com = comDataFactory.createComData(MT_OPENCHATSPORT);
+
+    ///< 将基类指针转换为开始聊天指针
+    OpenChatsPort* openChatsPort = dynamic_cast<OpenChatsPort*>(com);
+
+    ///< 判断是否发生转换异常
+    if (NULL == openChatsPort)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    openChatsPort->setUserName(userName);
+    openChatsPort->setAddress(targAddress);
+    openChatsPort->setLocalPort(localPort);
+    openChatsPort->setTargetPort(targPort);
+
+    sandData(com);
+}
+
 
 void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
 {
@@ -366,4 +397,5 @@ void ConnectSocket::updataTheList( QString& account, bool state )
                 + account.toStdString() + "的状态为" + (state ? "在线": "不在线"));
     sandUserList(account.toStdString(), "", "", state, true);
 }
+
 

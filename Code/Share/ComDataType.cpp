@@ -269,4 +269,37 @@ void ChatRequestResultType::setData( QDataStream &dataStream )
 }
 
 
+///< OPENCHATSPORT
+OpenChatsPort::OpenChatsPort( void )
+    :ComDataType(MT_OPENCHATSPORT)
+{
+
+}
+
+OpenChatsPort::OpenChatsPort( const QString& ipAddress, const QString& userName, quint32 localPort, quint32 targetPort )
+    :ComDataType(MT_OPENCHATSPORT),
+    m_ipAddress(ipAddress),
+    m_userName(userName),
+    m_localPort(localPort),
+    m_targetPort(targetPort)
+{
+
+}
+
+OpenChatsPort::~OpenChatsPort( void )
+{
+
+}
+
+
+void OpenChatsPort::getData( QDataStream &dataStream )
+{
+    dataStream << (qint32)m_msgType << m_ipAddress << m_userName << m_localPort << m_targetPort;
+}
+
+void OpenChatsPort::setData( QDataStream &dataStream )
+{
+    dataStream >> m_ipAddress >> m_userName >> m_localPort >> m_targetPort;
+}
+
 

@@ -66,6 +66,12 @@ ComDataType* ComDataTypeFactory::createComData( MsgType msgType )
             comDataType = new ChatRequestResultType();
             break;
         }
+    case MT_OPENCHATSPORT:
+        {
+            LogManager::getSingleton().logDebug("创建一个开始聊天消息");
+            comDataType = new OpenChatsPort();
+            break;
+        }
     default:
         {
             LogManager::getSingleton().logError("出现非法创建消息");

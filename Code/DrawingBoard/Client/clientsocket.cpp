@@ -1,5 +1,6 @@
 #include "clientsocket.h"
 #include "ComDataType.h"
+#include "chat.h"
 
 #include <boost/lexical_cast.hpp>
 #include <cassert>
@@ -238,6 +239,12 @@ void ClientSocket::receiveData()
                 requestChatResult(com);
                 break;
             }
+        case MT_OPENCHATSPORT:
+            {
+                LogManager::getSingleton().logDebug("交由开始聊天处理函数处理该请求消息");
+                requestOpenChat(com);
+                break;
+            }
         default:
             {
                 LogManager::getSingleton().logError("收到非法消息类型");
@@ -382,6 +389,30 @@ void ClientSocket::requestChatResult( ComDataType* data )
     delete data;
     data = NULL;
 
+}
+
+void ClientSocket::requestOpenChat( ComDataType* data )
+{
+
+    ///< 将基类指针转换为打开聊天实体指针
+    OpenChatsPort* openChatPort = dynamic_cast<OpenChatsPort*>(data);
+
+    ///< 判断是否发生转换异常
+    if (NULL == openChatPort)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("接受到打开聊天对话框, 来自" + 
+        openChatPort->getUserName().toStdString());
+
+    chat* chat_ = new chat(openChatPort->getUserName(), openChatPort->getAddress(), 
+                          openChatPort->getLocalPort(), openChatPort->getTargetPort());
+    chat_->exec();
+
+    delete data;
+    data = NULL;
 }
 
 

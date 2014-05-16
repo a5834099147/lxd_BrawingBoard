@@ -5,5 +5,12 @@
         <file>./圆角矩形.png</file>
         <file>./直线.png</file>
         <file>./pen.png</file>
+		<file>./Bin (empty).png</file>
+        <file>./fileopen.png</file>
+        <file>./Floppy.png</file>
+        <file>./textbold.png</file>
+        <file>./textcolor.png</file>
+        <file>./textitalic.png</file>
+        <file>./textunder.png</file>
     </qresource>
 </RCC>

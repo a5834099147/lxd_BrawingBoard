@@ -367,5 +367,59 @@ private:
     QString m_account;
 };
 
+class OpenChatsPort : public ComDataType
+{
+public:
+    OpenChatsPort(void);
+    OpenChatsPort(const QString& ipAddress, const QString& userName, quint32 localPort, quint32 targetPort);
+
+    ~OpenChatsPort(void);
+
+    QString getAddress() const
+    {
+        return m_ipAddress;
+    }
+    void setAddress(QString val)
+    {
+        m_ipAddress = val;
+    }
+
+    QString getUserName() const
+    {
+        return m_userName;
+    }
+    void setUserName(QString val) 
+    {
+        m_userName = val;
+    }
+
+    quint32 getLocalPort() const
+    {
+        return m_localPort;
+    }
+    void setLocalPort(quint32 val)
+    {
+        m_localPort = val;
+    }
+
+    quint32 getTargetPort() const
+    {
+        return m_targetPort;
+    }
+    void setTargetPort(quint32 val)
+    {
+        m_targetPort = val;
+    }
+
+    void getData( QDataStream &dataStream );
+    void setData( QDataStream &dataStream );
+
+private:
+    QString m_ipAddress;
+    QString m_userName;
+    quint32 m_localPort;
+    quint32 m_targetPort;
+};
+
 
 #endif  ///<__COMDATATYPE_H__

@@ -13,6 +13,7 @@ public:
     ServerThread(quint32 thrdfd, int sockfd, QObject *parent = NULL);
     ~ServerThread();
 
+    QString getPeerAddress();
     quint32 getThrdfd()
     const
     {
@@ -31,7 +32,6 @@ signals:
 
 private slots:
     void sockDisconnected();
-
 private:
     bool m_disconnected;
     quint32 m_thrd_fd;

@@ -41,6 +41,7 @@ private:
     void requestUserList(ComDataType* data);
     void requestChat(ComDataType* data);
     void requestChatResult(ComDataType* data);
+    void requestOpenChat(ComDataType* data);
 
     void sandRequestChatResult(std::string account, bool result);
 

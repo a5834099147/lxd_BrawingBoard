@@ -23,3 +23,13 @@ ChatRequestResult::ChatRequestResult( const QString& name, bool result )
 {
 
 }
+
+OpenChatPort::OpenChatPort( const QString& ipAddress, const QString& userName, quint32 localPort, quint32 targetPort )
+    :CustomEventType(ET_OPENCHATPORT),
+    m_userName(userName),
+    m_ipAddress(ipAddress),
+    m_localPort(localPort),
+    m_targetPort(targetPort)
+{
+
+}
