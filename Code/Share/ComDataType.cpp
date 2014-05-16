@@ -214,12 +214,9 @@ ChatRequestDataType::ChatRequestDataType( void )
 
 }
 
-ChatRequestDataType::ChatRequestDataType( QString localAccount, QString localUserName, QString otherAccount, QString otherUserName )
+ChatRequestDataType::ChatRequestDataType( QString account )
     :ComDataType(MT_CHATREQUESTS_DATA),
-    m_localAccount(localAccount),
-    m_localUserName(localUserName),
-    m_otherAccount(otherAccount),
-    m_otherUserName(otherUserName)
+    m_account(account)
 {
 
 }
@@ -232,14 +229,12 @@ ChatRequestDataType::~ChatRequestDataType( void )
 
 void ChatRequestDataType::getData( QDataStream &dataStream )
 {
-    dataStream << (qint32)m_msgType << m_localAccount << m_localUserName
-               << m_otherAccount << m_otherUserName;
+    dataStream << (qint32)m_msgType << m_account;
 }
 
 void ChatRequestDataType::setData( QDataStream &dataStream )
 {
-    dataStream >> m_localAccount >> m_localUserName 
-               >> m_otherAccount >> m_otherUserName;
+    dataStream >> m_account;
 }
 
 
@@ -250,10 +245,9 @@ ChatRequestResultType::ChatRequestResultType( void )
 
 }
 
-ChatRequestResultType::ChatRequestResultType( QString account, QString userName, bool result )
+ChatRequestResultType::ChatRequestResultType( QString account, bool result )
     :ComDataType(MT_CHATREQUESTS_RESULT),
     m_account(account),
-    m_userName(userName),
     m_result(result)
 {
 
@@ -266,12 +260,12 @@ ChatRequestResultType::~ChatRequestResultType( void )
 
 void ChatRequestResultType::getData( QDataStream &dataStream )
 {
-    dataStream << (qint32)m_msgType << m_account << m_userName << m_result;
+    dataStream << (qint32)m_msgType << m_account << m_result;
 }
 
 void ChatRequestResultType::setData( QDataStream &dataStream )
 {
-    dataStream >> m_account >> m_userName >> m_result;
+    dataStream >> m_account >> m_result;
 }
 
 

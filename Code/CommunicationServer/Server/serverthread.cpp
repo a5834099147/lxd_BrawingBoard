@@ -20,6 +20,10 @@ ServerThread::ServerThread(quint32 thrdfd, int sockfd, QObject *parent)
     connect(m_sock, SIGNAL(disconnected()), this, SLOT(sockDisconnected()));
     connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
     connect(m_sock, SIGNAL(login(const QString&)), this, SIGNAL(login(const QString&)));
+    connect(m_sock, SIGNAL(chatRequest(const QString&)),
+            this, SIGNAL(chatRequest(const QString&)));
+    connect(m_sock, SIGNAL(chatRequestResult(const QString&, bool)),
+            this, SIGNAL(chatRequestResult(const QString&, bool)));
 }
 
 ServerThread::~ServerThread()
@@ -52,4 +56,19 @@ void ServerThread::customEvent( QEvent *event )
         ChangeTheList* tarEvent = static_cast<ChangeTheList*>(event);
         m_sock->updataTheList(tarEvent->getUserName(), tarEvent->getOnLine());
     }
+    else if (event->type() == (QEvent::User + ET_CHATREQUEST))
+    {
+        LogManager::getSingleton().logDebug("线程: " + 
+                  boost::lexical_cast<std::string>(m_thrd_fd) + "收到聊天请求");
+        ChatRequest* tarEvent = static_cast<ChatRequest*>(event);
+        m_sock->sendChatRequest(tarEvent->getUserName());
+    }
+    else if (event->type() == (QEvent::User + ET_CHATREQUESTRESULT))
+    {
+        LogManager::getSingleton().logDebug("线程: " +
+                  boost::lexical_cast<std::string>(m_sock_fd) + "收到聊天请求结果");
+        ChatRequestResult* tarEvent = static_cast<ChatRequestResult*>(event);
+        m_sock->sendRequestChatRequest(tarEvent->getUserName(), tarEvent->getResult());
+    }
+
 }

@@ -7,6 +7,7 @@
 #include <cassert>
 #include <QDataStream>
 #include <string>
+#include <QHostAddress>
 
 ConnectSocket::ConnectSocket(QObject *parent)
     : QTcpSocket(parent)
@@ -127,6 +128,12 @@ void ConnectSocket::sandLogin_result(bool result)
 
     if (result)
     {
+        LogManager::getSingleton().logDebug("登陆机地址为: " + 
+                    peerAddress().toString().toStdString() + "端口为: " + 
+                    boost::lexical_cast<std::string>(peerPort()));
+        LogManager::getSingleton().logDebug("服务器地址为: " + 
+            localAddress().toString().toStdString() + "端口为: " + 
+            boost::lexical_cast<std::string>(localPort()));
         requestUserList();
     }
 }
@@ -187,6 +194,49 @@ void ConnectSocket::sandUserList(std::string account, std::string userName,
     sandData(com);
 }
 
+
+void ConnectSocket::sendChatRequest( QString& account )
+{
+    ///< 创建信息注册实体
+    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_DATA);
+
+    ///< 将基类指针转换为聊天请求指针
+    ChatRequestDataType* chatRequestData = dynamic_cast<ChatRequestDataType*>(com);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestData)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    chatRequestData->setAccount(account);
+
+    sandData(com);
+}
+
+void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
+{
+
+    ///< 创建信息注册实体
+    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_RESULT);
+
+    ///< 将基类指针转换为聊天请求指针
+    ChatRequestResultType* chatRequestResult = dynamic_cast<ChatRequestResultType*>(com);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestResult)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    chatRequestResult->setAccount(account);
+    chatRequestResult->setResult(result);
+
+    sandData(com);
+}
+
 void ConnectSocket::sandData(ComDataType* data)
 {
     ///< 需要发送的字节序
@@ -225,7 +275,42 @@ void ConnectSocket::sandData(ComDataType* data)
 void ConnectSocket::requestChatRequest( ComDataType* data )
 {
 
+    ///< 将基类指针转换为聊天请求实体指针
+    ChatRequestDataType* charRequestData = dynamic_cast<ChatRequestDataType*>(data);
+
+    ///< 判断是否发生转换异常
+    if (NULL == charRequestData)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("获得交谈请求并转发给主线程处理");
+    emit chatRequest(charRequestData->getAccount());
+
+    delete data;
+    data = NULL;
 }
+
+void ConnectSocket::requestChatResult( ComDataType* data )
+{
+    ///< 将基类指针转换为聊天请求结果实体指针
+    ChatRequestResultType* charRequest = dynamic_cast<ChatRequestResultType*>(data);
+
+    ///< 判断是否发生转换异常
+    if (NULL == charRequest)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("获得交谈请求结果并转发给主线程处理");
+    emit chatRequestResult(charRequest->getAccount(), charRequest->getResult());
+
+    delete data;
+    data = NULL;
+}
+
 
 void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
 {
@@ -261,6 +346,12 @@ void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
             requestChatRequest(data);
             break;
         }
+    case MT_CHATREQUESTS_RESULT:
+        {
+            LogManager::getSingleton().logDebug("将收到的消息交由聊天结果请求函数处理");
+            requestChatResult(data);
+            break;
+        }
     default:
         {
             LogManager::getSingleton().logDebug("收到非法消息类型");
@@ -271,7 +362,8 @@ void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
 
 void ConnectSocket::updataTheList( QString& account, bool state )
 {
-    LogManager::getSingleton().logDebug("发送更新用户名:" + account.toStdString() + "的状态为" + (state ? "在线": "不在线"));
+    LogManager::getSingleton().logDebug("发送更新用户名:" 
+                + account.toStdString() + "的状态为" + (state ? "在线": "不在线"));
     sandUserList(account.toStdString(), "", "", state, true);
 }
 

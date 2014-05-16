@@ -422,6 +422,7 @@ void MainWindow::CreatConnect()
     /* 用户列表下放*/
     connect(socket_, SIGNAL(recive_userList(std::string, std::string, std::string, bool, bool)),
         userWidget_, SLOT(contentChanges(std::string, std::string, std::string, bool, bool)));
+    connect(userWidget_, SIGNAL(chatRequest(const QString&)), socket_, SLOT(sandRequestChat(const QString&)));
 }
 
 void MainWindow::on_openAction_triggered()

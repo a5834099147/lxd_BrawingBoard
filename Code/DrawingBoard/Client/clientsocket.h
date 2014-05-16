@@ -22,6 +22,9 @@ signals:
     void recive_userList(std::string account, std::string userName, 
          std::string userPinyin, bool on_line, bool isUpdate);
 
+public slots:
+    void sandRequestChat(const QString& account);
+
 public:
     bool connectToServer(const char* ip, quint16 port);
     void sandMessage_Message(std::string meg);
@@ -36,6 +39,10 @@ private:
     void requestGetMessage_Data(ComDataType* data);
     void requestRegister_Result(ComDataType* data);
     void requestUserList(ComDataType* data);
+    void requestChat(ComDataType* data);
+    void requestChatResult(ComDataType* data);
+
+    void sandRequestChatResult(std::string account, bool result);
 
 private slots:
     void receiveData();

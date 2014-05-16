@@ -17,7 +17,9 @@ typedef enum{
 }MsgType;
 
 typedef enum{
-    ET_CHANGETHELIST = 0x01
+    ET_CHANGETHELIST = 0x01,
+    ET_CHATREQUEST,
+    ET_CHATREQUESTRESULT
 }EventType;
 
 #endif //_COMMON_H_

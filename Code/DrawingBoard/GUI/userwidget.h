@@ -34,6 +34,7 @@ public:
     explicit UserWidget(QWidget *parent = 0);
 
 signals:
+    void chatRequest(const QString& userAccount);
 
 public slots:
     void changeUsbState(QString usbState);
@@ -46,6 +47,7 @@ private slots:
     void on_exportB_clicked();
     void on_importB_clicked();
     void on_inquiryE_changed();
+    void on_cellDoubleClicked(int row, int colume);
 
 private:
     void InitInterface(void);

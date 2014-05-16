@@ -52,6 +52,10 @@ void ServerSocket::incomingConnection(int sockfd)
     connect(thrd, SIGNAL(exiting(quint32)), this, SLOT(thrdExiting(quint32)));
     connect(thrd, SIGNAL(exiting(quint32)), this, SLOT(logout(quint32)));
     connect(thrd, SIGNAL(login(const QString&)), this, SLOT(login(const QString&)));
+    connect(thrd, SIGNAL(chatRequest(const QString&)),
+        this, SLOT(chatRequest(const QString&)));
+    connect(thrd, SIGNAL(chatRequestResult(const QString&, bool)),
+        this, SLOT(chatRequestResult(const QString&, bool)));
 
     ///< 将线程加入到线程链表中
     m_mutex->lock();
@@ -144,4 +148,69 @@ void ServerSocket::login( const QString& userName )
         QCoreApplication::postEvent(thread, new ChangeTheList(onLineUser, true));
     }
     m_mutex->unlock();
+}
+
+void ServerSocket::chatRequest( const QString& account )
+{
+
+    ServerThread* thread = qobject_cast<ServerThread*>(sender());
+
+    m_mutex->lock();
+    ///< 没有找到该线程
+    assert(-1 != m_threads.indexOf(thread));
+    QString requestAccount = m_userHash.key(thread, "");
+    m_mutex->unlock(); 
+
+    if (requestAccount == "")
+    {
+        LogManager::getSingleton().logAlert("主线程获得聊天请求, 但是无法确认发送请求的用户名");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("主线程获得聊天请求, 申请用户名为: " + 
+        requestAccount.toStdString());
+    m_mutex->lock();
+    ServerThread* targetThread = m_userHash.value(account, NULL);
+    m_mutex->unlock();
+
+    if (NULL == targetThread)
+    {
+        LogManager::getSingleton().logAlert("主线程获得聊天请求, 但是无法确认" 
+                    + account.toStdString() + "对方的套接字线程");
+        assert(false);
+    }
+
+    QCoreApplication::postEvent(targetThread, new ChatRequest(requestAccount));
+}
+
+void ServerSocket::chatRequestResult( const QString& account, bool result )
+{
+    ServerThread* thread = qobject_cast<ServerThread*>(sender());
+
+    m_mutex->lock();
+    ///< 没有找到该线程
+    assert(-1 != m_threads.indexOf(thread));
+    QString requestAccount = m_userHash.key(thread, "");
+    m_mutex->unlock(); 
+
+    if (requestAccount == "")
+    {
+        LogManager::getSingleton().logAlert("主线程获得聊天结果发送请求, 但是无法确认发送请求的用户名");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("主线程获得聊天结果发送请求, 申请用户名为: " + 
+        requestAccount.toStdString());
+    m_mutex->lock();
+    ServerThread* targetThread = m_userHash.value(account, NULL);
+    m_mutex->unlock();
+
+    if (NULL == targetThread)
+    {
+        LogManager::getSingleton().logAlert("主线程获得聊天结果发送请求, 但是无法确认" 
+            + account.toStdString() + "对方的套接字线程");
+        assert(false);
+    }
+
+    QCoreApplication::postEvent(targetThread, new ChatRequestResult(requestAccount, result));
 }

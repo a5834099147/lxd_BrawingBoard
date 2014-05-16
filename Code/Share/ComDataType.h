@@ -311,8 +311,7 @@ class ChatRequestDataType : public ComDataType
 {
 public:
     ChatRequestDataType(void);
-    ChatRequestDataType(QString localAccount, QString localUserName, 
-                        QString otherAccount, QString otherUserName);
+    ChatRequestDataType(QString account);
 
      ~ChatRequestDataType(void);
 
@@ -320,47 +319,17 @@ public:
     void setData(QDataStream &dataStream);
 
 public:
-    const QString& getLocalAccount() const
+    const QString& getAccount() const
     {
-        return m_localAccount;
+        return m_account;
     }
-    void setLocalAccount(QString val)
+    void setAccount(QString val)
     {
-        m_localAccount = val;
-    }
-
-    const QString& getLocalUserName() const
-    {
-        return m_localUserName;
-    }
-    void setLocalUserName(QString val)
-    {
-        m_localUserName = val;
-    }
-
-    const QString& getOtherAccount() const
-    {
-        return m_otherAccount;
-    }
-    void setOtherAccount(QString val)
-    {
-        m_otherAccount = val;
-    }
-
-    const QString& getOtherUserName() const
-    {
-        return m_otherUserName;
-    }
-    void setOtherUserName(QString val)
-    {
-        m_otherUserName = val;
+        m_account = val;
     }
 
 private:
-    QString m_localAccount;
-    QString m_localUserName;
-    QString m_otherAccount;
-    QString m_otherUserName;
+    QString m_account;
 };
 
 ///< 聊天请求结果
@@ -368,7 +337,7 @@ class ChatRequestResultType : public ComDataType
 {
 public:
     ChatRequestResultType(void);
-    ChatRequestResultType(QString account, QString userName, bool result);
+    ChatRequestResultType(QString account, bool result);
 
     ~ChatRequestResultType(void);
 
@@ -393,19 +362,9 @@ public:
         m_account = val;
     }
 
-    QString getUserName() const
-    {
-        return m_userName;
-    }
-    void setUserName(QString val)
-    {
-        m_userName = val;
-    }
-
 private:
     bool m_result;
     QString m_account;
-    QString m_userName;
 };
 
 

@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 #include <string>
 #include <QLabel>
+#include <QtGui/QMessageBox>
 
 using namespace libxl;
 
@@ -111,7 +112,9 @@ void UserWidget::CreateSlots()
     connect(importB_, SIGNAL(clicked()),
         this, SLOT(on_importB_clicked()));
     connect(inquiryE_, SIGNAL(textEdited(const QString &)),
-        this, SLOT(on_inquiryE_changed()));	
+        this, SLOT(on_inquiryE_changed()));
+    connect(infoList_, SIGNAL(cellDoubleClicked(int, int)),
+            this, SLOT(on_cellDoubleClicked(int, int)));
 }
 
 void UserWidget::on_inquiryE_changed()
@@ -233,4 +236,35 @@ void UserWidget::tableContentChange( User user )
     infoList_->setItem(user.rowId_, 0, new QTableWidgetItem(QString(user.account.c_str())));
     infoList_->setItem(user.rowId_, 1, new QTableWidgetItem(QString(user.userName.c_str())));
     infoList_->setItem(user.rowId_, 2, new QTableWidgetItem(QString(user.on_line ? "是" : "否")));
+}
+
+void UserWidget::on_cellDoubleClicked( int row, int colume )
+{
+    QTableWidgetItem* userStateItem = infoList_->item(row, 2);
+    QString userState = userStateItem->text();
+
+    if ("否" == userState)
+    {
+        LogManager::getSingleton().logDebug("用户选择了非在线用户期望聊天, 被系统拒绝");
+        QMessageBox::information(NULL, "失败", "您所选择的用户不在线, 不能进行聊天",
+                                 QMessageBox::Yes, QMessageBox::Yes);
+        return;
+    }
+
+    QTableWidgetItem* userAccountItem = infoList_->item(row, 0);
+    QString userAccount = userAccountItem->text();
+
+    LogManager::getSingleton().logDebug("用户选择了与" + userAccount.toStdString() + "交谈, 弹出对话框有用户确认");
+    
+    if (QMessageBox::information(NULL, "请确认", "您是否需要向用户:" + userAccount + "发起交谈, 如若需要请确定",
+                             QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No)
+    {
+        LogManager::getSingleton().logDebug("用户取消了同" + userAccount.toStdString() + "的交谈请求");
+    }
+    else 
+    {
+        LogManager::getSingleton().logDebug("用户确认了同" + userAccount.toStdString() + "的交谈请求");
+        emit chatRequest(userAccount);
+        QMessageBox::information(NULL, "提醒", "系统已经发送了您的会话请求, 请稍后...");
+    }
 }

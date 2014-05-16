@@ -17,10 +17,14 @@ public:
 
 public:
     void updataTheList(QString& account, bool state);
+    void sendChatRequest(QString& account);
+    void sendRequestChatRequest(QString& account, bool result);
 
 signals:
     void closing(int sockfd);
     void login(const QString& userName);
+    void chatRequest(const QString& account);
+    void chatRequestResult(const QString& account, bool result);
 
 private slots:
     void receiveData();
@@ -35,6 +39,7 @@ private:
     void requestSendMessage_Data(ComDataType* data);
     void requestRegister(ComDataType* data);
     void requestChatRequest(ComDataType* data);
+    void requestChatResult(ComDataType* data);
     void requestUserList();
 
     void sandLogin_result(bool result);

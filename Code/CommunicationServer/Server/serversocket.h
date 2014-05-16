@@ -24,6 +24,8 @@ private slots:
     void thrdExiting(quint32 thrdfd);
     void logout(quint32 thrdfd);
     void login(const QString& userName);
+    void chatRequest(const QString& account);
+    void chatRequestResult(const QString& account, bool result);
 
 private:
     ///< ¶Ë¿ÚºÅ

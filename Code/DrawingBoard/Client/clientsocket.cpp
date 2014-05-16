@@ -5,6 +5,7 @@
 #include <cassert>
 #include <QtNetwork/QHostAddress>
 #include <string>
+#include <QtGui/QMessageBox>
 
 ClientSocket::ClientSocket(QObject *parent)
     : QTcpSocket(parent)
@@ -79,6 +80,54 @@ void ClientSocket::sandRegister(std::string account, std::string password, std::
     registerDate->setUserName(userName.c_str());
     ///< 设置注册用户名拼音
     registerDate->setSpelling(pinYin.c_str());
+
+    ///< 发送该实体
+    sandData(com);
+}
+
+void ClientSocket::sandRequestChat( const QString& account )
+{
+
+    ///< 创建信息注册实体
+    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_DATA);
+
+    ///< 将基类指针转换为聊天请求实体指针
+    ChatRequestDataType* chatRequestDate = dynamic_cast<ChatRequestDataType*>(com);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestDate)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    ///< 设置注册账号
+    chatRequestDate->setAccount(account);
+
+    ///< 发送该实体
+    sandData(com);
+}
+
+
+void ClientSocket::sandRequestChatResult( std::string account, bool result )
+{
+
+    ///< 创建信息注册实体
+    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_RESULT);
+
+    ///< 将基类指针转换为聊天请求结果实体指针
+    ChatRequestResultType* chatRequestResult = dynamic_cast<ChatRequestResultType*>(com);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestResult)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    ///< 设置注册账号
+    chatRequestResult->setAccount(account.c_str());
+    chatRequestResult->setResult(result);
 
     ///< 发送该实体
     sandData(com);
@@ -171,12 +220,23 @@ void ClientSocket::receiveData()
                 requestRegister_Result(com);
                 break;
             }
-
         case MT_RETURNTHELIST_DATA:
             {
                 LogManager::getSingleton().logDebug("交由数据表处理函数处理数据表信息");
                 requestUserList(com);
                 break; 
+            }
+        case MT_CHATREQUESTS_DATA:
+            {
+                LogManager::getSingleton().logDebug("交由聊天请求处理函数处理请求信息");
+                requestChat(com);
+                break;
+            }
+        case MT_CHATREQUESTS_RESULT:
+            {
+                LogManager::getSingleton().logDebug("交由聊天请求结果处理函数处理该回执信息");
+                requestChatResult(com);
+                break;
             }
         default:
             {
@@ -258,3 +318,71 @@ void ClientSocket::requestUserList(ComDataType* data)
     delete data;
     data = NULL;
 }
+
+void ClientSocket::requestChat( ComDataType* data )
+{
+
+    ///< 将基类指针转换为聊天请求实体指针
+    ChatRequestDataType* chatRequestData = dynamic_cast<ChatRequestDataType*>(data);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestData)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("接受到聊天请求信息, 来自" + 
+                chatRequestData->getAccount().toStdString());
+
+    if (QMessageBox::question(NULL, "对话请求", "用户: " + 
+        chatRequestData->getAccount() + " 期望与您交谈, 您是否允许?",
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No)
+    {
+        sandRequestChatResult(chatRequestData->getAccount().toStdString(), false);
+    }
+    else 
+    {
+        sandRequestChatResult(chatRequestData->getAccount().toStdString(), true);
+    }
+
+    delete data;
+    data = NULL;
+}
+
+void ClientSocket::requestChatResult( ComDataType* data )
+{
+
+    ///< 将基类指针转换为注册结果实体指针
+    ChatRequestResultType* chatRequestResult = dynamic_cast<ChatRequestResultType*>(data);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatRequestResult)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    LogManager::getSingleton().logDebug("接收到来自: " + 
+                chatRequestResult->getAccount().toStdString() + "的聊天请求结果");
+
+    if (chatRequestResult->getResult())
+    {
+        QMessageBox::information(NULL, "对话请求回执", "系统正在为您建立与用户 " +
+            chatRequestResult->getAccount() + "之间的链接, 请稍候...",
+            QMessageBox::Yes, QMessageBox::Yes);
+    }
+    else 
+    {
+        QMessageBox::information(NULL, "对话请求回执", "很抱歉用户  " +
+            chatRequestResult->getAccount() + "拒绝了您的交谈请求",
+            QMessageBox::Yes, QMessageBox::Yes);
+    }
+
+    delete data;
+    data = NULL;
+
+}
+
+
+

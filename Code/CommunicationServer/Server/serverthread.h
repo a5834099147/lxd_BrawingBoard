@@ -26,6 +26,8 @@ protected:
 signals:
     void exiting(quint32 thrdfd);
     void login(const QString& userName);
+    void chatRequest(const QString& account);
+    void chatRequestResult(const QString& account, bool result);
 
 private slots:
     void sockDisconnected();
