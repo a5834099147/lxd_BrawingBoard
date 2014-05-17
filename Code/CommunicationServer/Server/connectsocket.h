@@ -45,7 +45,7 @@ private:
     void requestChatResult(ComDataType* data);
     void requestUserList();
 
-    void sandLogin_result(bool result);
+    void sandLogin_result(const QString& userAccount, bool result);
     void sandRigister_result(bool reslut);
     void sandUserList(std::string account, std::string userName, 
         std::string userPinyin, bool on_line, bool isUpdate);

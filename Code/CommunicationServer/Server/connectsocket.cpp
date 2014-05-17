@@ -63,7 +63,7 @@ void ConnectSocket::requestLandingData(ComDataType* data)
 
     bool result = odb_user::logon(landingData->getAccount().toStdString(), 
                                   landingData->getPassword().toStdString());	
-    sandLogin_result(result);
+    sandLogin_result(landingData->getAccount(), result);
 
     if (result)
     {
@@ -106,7 +106,7 @@ void ConnectSocket::requestRegister(ComDataType* data)
     data = NULL;
 }
 
-void ConnectSocket::sandLogin_result(bool result)
+void ConnectSocket::sandLogin_result(const QString& userAccount, bool result)
 {
 
     ///< 创建信息注册实体
@@ -123,6 +123,7 @@ void ConnectSocket::sandLogin_result(bool result)
     }
     
     landingResult->setResult(result);
+    landingResult->setAccount(userAccount);
 
     sandData(com);
 

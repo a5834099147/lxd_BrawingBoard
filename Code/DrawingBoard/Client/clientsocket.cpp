@@ -37,7 +37,7 @@ void ClientSocket::sandMessage_Message(std::string meg)
 void ClientSocket::landing_Data(std::string account, std::string password)
 {
     ///< 创建信息发送实体
-    ComDataType* com = comDataFactory.createComData(MT_LANDING_DATA);
+    ComDataType* com = m_comDataFactory.createComData(MT_LANDING_DATA);
 
     ///< 将基类指针转换为发送实体指针
     LandingDataType* landingData = dynamic_cast<LandingDataType*>(com);
@@ -61,7 +61,7 @@ void ClientSocket::landing_Data(std::string account, std::string password)
 void ClientSocket::sandRegister(std::string account, std::string password, std::string userName, std::string pinYin)
 {
     ///< 创建信息注册实体
-    ComDataType* com = comDataFactory.createComData(MT_REGISTER_DATA);
+    ComDataType* com = m_comDataFactory.createComData(MT_REGISTER_DATA);
 
     ///< 将基类指针转换为注册实体指针
     RegisterDataType* registerDate = dynamic_cast<RegisterDataType*>(com);
@@ -90,7 +90,7 @@ void ClientSocket::sandRequestChat( const QString& account )
 {
 
     ///< 创建信息注册实体
-    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_DATA);
+    ComDataType* com = m_comDataFactory.createComData(MT_CHATREQUESTS_DATA);
 
     ///< 将基类指针转换为聊天请求实体指针
     ChatRequestDataType* chatRequestDate = dynamic_cast<ChatRequestDataType*>(com);
@@ -102,8 +102,40 @@ void ClientSocket::sandRequestChat( const QString& account )
         assert(false);
     }
 
+    if (account == m_selfAccount)
+    {
+        LogManager::getSingleton().logWarn("与自己建立连接请求被回绝");
+        QMessageBox::warning(NULL, "警告", "您试图与自己建立通信, 这是非法的!",
+                             QMessageBox::Ok, QMessageBox::Ok);
+        delete com;
+        return;
+    }
+
+    if (-1 != m_talkAccountList.indexOf(account))
+    {
+        LogManager::getSingleton().logWarn("与正在通话的连接发起对话, 被回绝");
+        QMessageBox::warning(NULL, "警告", "您已经与用户: " +
+                             account + "建立了连接, 这是非法的!", 
+                             QMessageBox::Ok, QMessageBox::Ok);
+        delete com;
+        return;
+    }
+
+    if (-1 != m_askForAccountList.indexOf(account))
+    {
+        LogManager::getSingleton().logWarn("与已经提交申请但是没有回复的用户发起通话, 被系统回绝");
+        QMessageBox::warning(NULL, "警告", "您已经向用户: " +
+                             account + "提出了申请, 对方还没有给您回复, 请等待",
+                             QMessageBox::Ok, QMessageBox::Ok);
+        delete com;
+        return;
+    }
+
     ///< 设置注册账号
     chatRequestDate->setAccount(account);
+
+    ///< 在请求列表中添加该用户
+    m_askForAccountList.append(account);
 
     ///< 发送该实体
     sandData(com);
@@ -114,7 +146,7 @@ void ClientSocket::sandRequestChatResult( std::string account, bool result )
 {
 
     ///< 创建信息注册实体
-    ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_RESULT);
+    ComDataType* com = m_comDataFactory.createComData(MT_CHATREQUESTS_RESULT);
 
     ///< 将基类指针转换为聊天请求结果实体指针
     ChatRequestResultType* chatRequestResult = dynamic_cast<ChatRequestResultType*>(com);
@@ -192,7 +224,7 @@ void ClientSocket::receiveData()
         MsgType msgType;
         receive >> (qint32&)msgType;
 
-        ComDataType* com = comDataFactory.createComData(msgType);
+        ComDataType* com = m_comDataFactory.createComData(msgType);
         com->setData(receive);
 
         switch(msgType)
@@ -268,6 +300,11 @@ void ClientSocket::requestLanding_Result(ComDataType* data)
 
     LogManager::getSingleton().logDebug("发送登陆处理结果消息");
     emit recive_login(landingResult->getResult());
+
+    if (landingResult->getResult()) 
+    {
+        m_selfAccount = landingResult->getAccount();
+    }
 
     delete data;
     data = NULL;
@@ -386,6 +423,20 @@ void ClientSocket::requestChatResult( ComDataType* data )
             QMessageBox::Yes, QMessageBox::Yes);
     }
 
+    int index = m_askForAccountList.indexOf(chatRequestResult->getAccount());
+    if (-1 == index)
+    {
+        LogManager::getSingleton().logError("在请求列表中无法找到用户" + 
+                    chatRequestResult->getAccount().toStdString());
+        assert(false);
+    }
+    else 
+    {
+        m_askForAccountList.remove(index);
+        LogManager::getSingleton().logDebug("在请求列表中删除用户" + 
+                    chatRequestResult->getAccount().toStdString());
+    }
+
     delete data;
     data = NULL;
 
@@ -407,12 +458,39 @@ void ClientSocket::requestOpenChat( ComDataType* data )
     LogManager::getSingleton().logDebug("接受到打开聊天对话框, 来自" + 
         openChatPort->getUserName().toStdString());
 
-    chat* chat_ = new chat(openChatPort->getUserName(), openChatPort->getAddress(), 
+    Chat* chat_ = new Chat(openChatPort->getUserName(), openChatPort->getAddress(), 
                           openChatPort->getLocalPort(), openChatPort->getTargetPort());
-    chat_->exec();
+    chat_->show();
+
+    m_talkAccountList.append(openChatPort->getUserName());
+    ///< 将对话对话框加入到Vector中
+    m_chatVector.append(chat_);
+    connect(chat_, SIGNAL(exitTheChat()), this, SLOT(ChatFinished()));
 
     delete data;
     data = NULL;
+}
+
+void ClientSocket::ChatFinished()
+{
+    LogManager::getSingleton().logDebug("有一个交谈对话框结束了交谈, 正在析构");
+    Chat* chat = qobject_cast<Chat*>(sender());
+    ///< 在聊天对话框集合中找到要关闭的实体
+    assert(-1 != m_chatVector.indexOf(chat));
+    LogManager::getSingleton().logDebug("在聊天集合中找到要析构的Chat实体指针");
+    ///< 在聊天用户列表中找到需要关闭实体的用户名
+    assert(-1 != m_talkAccountList.indexOf(chat->getUserAccount()));
+    LogManager::getSingleton().logDebug("在聊天姓名集合中找到要析构的Chat实体指针");
+
+    ///< 删除
+    m_talkAccountList.remove(m_talkAccountList.indexOf(chat->getUserAccount()));
+    LogManager::getSingleton().logDebug("在聊天姓名集合中删除了该姓名信息");
+    m_chatVector.remove(m_chatVector.indexOf(chat));
+    LogManager::getSingleton().logDebug("在聊天集合中删除了该Chat实体指针");
+
+    delete chat;
+    LogManager::getSingleton().logDebug("delete了要删除的Chat实体指针");
+    chat = NULL;
 }
 
 

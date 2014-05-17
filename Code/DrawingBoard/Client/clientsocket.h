@@ -7,6 +7,7 @@
 #include "LogManager.h"
 
 class ComDataType;
+class Chat;
 
 class ClientSocket : public QTcpSocket
 {
@@ -47,9 +48,14 @@ private:
 
 private slots:
     void receiveData();
+    void ChatFinished();
 
 private:
-    ComDataTypeFactory comDataFactory;
+    ComDataTypeFactory m_comDataFactory;
+    QVector<QString> m_askForAccountList;
+    QVector<QString> m_talkAccountList;
+    QVector<Chat*> m_chatVector;
+    QString m_selfAccount;
 };
 
 #endif // CLIENTSOCKET_H

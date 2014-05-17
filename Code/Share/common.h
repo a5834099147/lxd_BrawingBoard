@@ -1,7 +1,7 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-typedef enum{
+typedef enum {
     MT_NULL = 0x00,
     MT_LANDING_DATA,
     MT_LANDING_RESULT,
@@ -17,11 +17,17 @@ typedef enum{
     MT_OPENCHATSPORT
 }MsgType;
 
-typedef enum{
+typedef enum {
     ET_CHANGETHELIST = 0x01,
     ET_CHATREQUEST,
     ET_CHATREQUESTRESULT,
     ET_OPENCHATPORT
 }EventType;
+
+typedef enum {
+    CM_MESSAGE = 0X01,
+    CM_EXIT,
+    CM_FILENAME
+}ChatMessageType;
 
 #endif //_COMMON_H_

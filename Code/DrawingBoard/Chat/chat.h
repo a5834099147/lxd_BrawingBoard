@@ -5,36 +5,44 @@
 #include <QtNetwork/QtNetwork>
 #include <QtGui>
 
+#include "ChatDataTypeFactory.h"
+
+class ChatDataType;
+
 namespace Ui {
     class chat;
 }
 
-class chat : public QDialog
+class Chat : public QDialog
 {
     Q_OBJECT
 
 public:
-    ~chat();
-    chat(QString pasvusername, QString pasvuserip, qint32 localPort, qint32 targPort);
+    ~Chat();
+    Chat(QString pasvusername, QString pasvuserip, qint32 localPort, qint32 targPort);
+
+public:
+    QString getUserAccount() const;
+
+signals:
+    void exitTheChat();
 
 private:
-    Ui::chat *ui;
-    QColor color;//颜色
-    QString m_message;
-    QString m_targIp;
-    QString m_targAccount;
-    QUdpSocket *m_chatSocket;
-    qint32 m_localPort;
-    qint32 m_targPort;
-
-private:
-    void sendMessage();
     bool saveFile(const QString& fileName);//保存聊天记录
     QString getMessage();
     QString getIP();
+    
+    void requestMessage(ChatDataType* cDType);
+    void requestFileName(ChatDataType* cDType);
+    void requestExit();
+    void sendExit();
+    void sendMessage();
+
+    void sendUDPMessage(ChatDataType* cDType);
 
 protected:
     bool eventFilter(QObject *target, QEvent *event); //事件过滤器
+    void closeEvent(QCloseEvent *);
 
 private slots:
     void processPendingDatagrams();
@@ -48,6 +56,20 @@ private slots:
     void on_fontComboBox_currentFontChanged(QFont f);
     void on_fontsizecomboBox_currentIndexChanged(QString );
     void currentFormatChanged(const QTextCharFormat &format);
+
+private:
+    Ui::chat *ui;
+    QColor m_color;//颜色
+    QString m_message;
+    QString m_targIp;
+    QString m_targAccount;
+    QUdpSocket *m_chatSocket;
+    qint32 m_localPort;
+    qint32 m_targPort;
+    bool m_passiveClose;
+    bool m_canSend;
+
+    ChatDataTypeFactory m_cDTypeFactory;
 };
 
 #endif // CHAT_H

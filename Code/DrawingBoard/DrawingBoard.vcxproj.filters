@@ -125,9 +125,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_userwidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_resource.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Share\ComDataType.cpp">
       <Filter>Share</Filter>
     </ClCompile>
@@ -158,6 +155,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_chat.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_resource.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat\ChatDataType.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat\ChatDataTypeFactory.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Client\clientsocket.h">
@@ -181,16 +187,13 @@
     <CustomBuild Include="GUI\userwidget.h">
       <Filter>GUI</Filter>
     </CustomBuild>
-    <CustomBuild Include="Resources\resource.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Chat\chat.h">
       <Filter>Chat</Filter>
     </CustomBuild>
-    <CustomBuild Include="Chat\resource.qrc">
+    <CustomBuild Include="Chat\chat.ui">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Chat\chat.ui">
+    <CustomBuild Include="Resources\resource.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -246,5 +249,49 @@
     <ClInclude Include="GeneratedFiles\ui_chat.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Chat\ChatDataType.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Chat\ChatDataTypeFactory.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\矩形.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\圆.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\圆角矩形.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\直线.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\pen.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\Bin (empty).png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\fileopen.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\Floppy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\textbold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\textcolor.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\textitalic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\textunder.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

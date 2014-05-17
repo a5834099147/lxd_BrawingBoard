@@ -73,7 +73,7 @@ class LandingResultType : public ComDataType
 {
 public:
     LandingResultType(void);
-    LandingResultType(bool result);
+    LandingResultType(QString account, bool result);
 
     ~LandingResultType(void);
 
@@ -85,13 +85,22 @@ public:
     {
         return m_result;
     }
-
     void setResult(bool result)
     {
         m_result = result;
     }
 
+    QString getAccount() const
+    {
+        return m_account;
+    }
+    void setAccount(QString val)
+    {
+        m_account = val;
+    }
+
 private:
+    QString m_account;
     bool m_result;
 };
 

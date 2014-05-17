@@ -1,14 +1,20 @@
 #include "chat.h"
 #include "ui_chat.h"
+#include "common.h"
+#include "ChatDataType.h"
+#include "LogManager.h"
+
 #include <cassert>
 
 
-chat::chat(QString targAccont, QString targIp, qint32 localPort, qint32 targPort)
+Chat::Chat(QString targAccont, QString targIp, qint32 localPort, qint32 targPort)
     : ui(new Ui::chat),
     m_localPort(localPort),
     m_targPort(targPort),
     m_targAccount(targAccont),
-    m_targIp(targIp)
+    m_targIp(targIp),
+    m_passiveClose(false),
+    m_canSend(true)
 {
     ui->setupUi(this);
     ui->textEdit->setFocusPolicy(Qt::StrongFocus);
@@ -27,16 +33,14 @@ chat::chat(QString targAccont, QString targIp, qint32 localPort, qint32 targPort
     connect(m_chatSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 
     connect(ui->textEdit,SIGNAL(currentCharFormatChanged(QTextCharFormat)),this,SLOT(currentFormatChanged(const QTextCharFormat)));
-
-    this->show();
 }
 
-chat::~chat()
+Chat::~Chat()
 {
     delete ui;
 }
 
-bool chat::eventFilter(QObject *target, QEvent *event)
+bool Chat::eventFilter(QObject *target, QEvent *event)
 {
     if(target == ui->textEdit)
     {
@@ -53,7 +57,7 @@ bool chat::eventFilter(QObject *target, QEvent *event)
     return QWidget::eventFilter(target,event);
 }
 
-QString chat::getIP()  //获取ip地址
+QString Chat::getIP()  //获取ip地址
 {
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
     foreach (QHostAddress address, list)
@@ -65,7 +69,7 @@ QString chat::getIP()  //获取ip地址
     return 0;
 }
 
-void chat::processPendingDatagrams()   //接收数据UDP
+void Chat::processPendingDatagrams()   //接收数据UDP
 {
     while(m_chatSocket->hasPendingDatagrams())
     {
@@ -74,46 +78,86 @@ void chat::processPendingDatagrams()   //接收数据UDP
         m_chatSocket->readDatagram(datagram.data(),datagram.size());
         QDataStream in(&datagram,QIODevice::ReadOnly);
 
-        ///< 收到的消息
-        QString message;
-        ///< 将消息输出到消息字符串中
-        in >> message;
+        ChatMessageType chatMessageType;
+        in >> (qint32&)chatMessageType;
 
-        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        ui->textBrowser->setTextColor(Qt::blue);
-        ui->textBrowser->setCurrentFont(QFont("Times New Roman",12));
-        ui->textBrowser->append("[ " + m_targAccount +" ] "+ time);
-        ui->textBrowser->append(message);
+        ChatDataType* chatDataType = m_cDTypeFactory.createChatMessageType(chatMessageType);
+        chatDataType->setData(in);
+        
+        switch (chatMessageType)
+        {
+        case CM_MESSAGE:
+            {
+                LogManager::getSingleton().logDebug("聊天对话框收到带有聊天内容的消息, 交由聊天内容处理函数处理");
+                requestMessage(chatDataType);
+                break;
+            }
+        case CM_EXIT:
+            {
+                LogManager::getSingleton().logDebug("聊天对话框收到结束对话消息, 交由结束通话函数处理");
+                requestExit();
+                break;
+            }
+        case  CM_FILENAME:
+            {
+                LogManager::getSingleton().logDebug("聊天对话框收到文件请求消息, 交由文件请求函数处理");
+                requestFileName(chatDataType);
+                break;
+            }
+        default:
+            {
+                LogManager::getSingleton().logDebug("聊天对话框收到非法消息, 无法解析");
+                assert(false);
+                break;
+            }
+        }
     }
 }
 
-QString chat::getMessage()  //获得要发送的信息
+QString Chat::getMessage()  //获得要发送的信息
 {
     QString msg = ui->textEdit->toHtml();
-    qDebug()<<msg;
     ui->textEdit->clear();
     ui->textEdit->setFocus();
     return msg;
 }
 
-void chat::sendMessage()  //发送信息
+void Chat::sendMessage()  //发送信息
 {
-    QByteArray data;
-    QDataStream out(&data,QIODevice::WriteOnly);
-
     if(ui->textEdit->toPlainText() == "")
     {
         QMessageBox::warning(0,tr("警告"),tr("发送内容不能为空"),QMessageBox::Ok);
         return;
     }
+
+    if (!m_canSend)
+    {
+        QMessageBox::warning(NULL, tr("警告"), tr("对方已经离线, 发送消息失败"), QMessageBox::Ok);
+        return;
+    }
+
+    ///< 创建消息实体
+    ChatDataType* cDType = m_cDTypeFactory.createChatMessageType(CM_MESSAGE);
+
+    ///< 将基类指针转换为消息实体指针
+    ChatMessageDataType* cMDType = dynamic_cast<ChatMessageDataType*>(cDType);
+
+    ///< 判断是否发生转换异常
+    if (NULL == cMDType)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
     m_message = getMessage();
-    out << m_message;
+    cMDType->setMessage(m_message);
 
     ui->textBrowser->verticalScrollBar()->setValue(ui->textBrowser->verticalScrollBar()->maximum());
-    m_chatSocket->writeDatagram(data,data.length(),QHostAddress::QHostAddress(m_targIp), m_targPort);
+
+    sendUDPMessage(cDType);
 }
 
-void chat::currentFormatChanged(const QTextCharFormat &format)
+void Chat::currentFormatChanged(const QTextCharFormat &format)
 {//当编辑器的字体格式改变时，我们让部件状态也随之改变
     ui->fontComboBox->setCurrentFont(format.font());
 
@@ -129,22 +173,22 @@ void chat::currentFormatChanged(const QTextCharFormat &format)
     ui->textbold->setChecked(format.font().bold());
     ui->textitalic->setChecked(format.font().italic());
     ui->textUnderline->setChecked(format.font().underline());
-    color = format.foreground().color();
+    m_color = format.foreground().color();
 }
 
-void chat::on_fontComboBox_currentFontChanged(QFont f)//字体设置
+void Chat::on_fontComboBox_currentFontChanged(QFont f)//字体设置
 {
     ui->textEdit->setCurrentFont(f);
     ui->textEdit->setFocus();
 }
 
-void chat::on_fontsizecomboBox_currentIndexChanged(QString size)
+void Chat::on_fontsizecomboBox_currentIndexChanged(QString size)
 {
     ui->textEdit->setFontPointSize(size.toDouble());
     ui->textEdit->setFocus();
 }
 
-void chat::on_textbold_clicked(bool checked)
+void Chat::on_textbold_clicked(bool checked)
 {
     if(checked)
         ui->textEdit->setFontWeight(QFont::Bold);
@@ -153,13 +197,13 @@ void chat::on_textbold_clicked(bool checked)
     ui->textEdit->setFocus();
 }
 
-void chat::on_textitalic_clicked(bool checked)
+void Chat::on_textitalic_clicked(bool checked)
 {
     ui->textEdit->setFontItalic(checked);
     ui->textEdit->setFocus();
 }
 
-void chat::on_save_clicked()//保存聊天记录
+void Chat::on_save_clicked()//保存聊天记录
 {
     if(ui->textBrowser->document()->isEmpty())
         QMessageBox::warning(0,tr("警告"),tr("聊天记录为空，无法保存！"),QMessageBox::Ok);
@@ -172,12 +216,12 @@ void chat::on_save_clicked()//保存聊天记录
     }
 }
 
-void chat::on_clear_clicked()//清空聊天记录
+void Chat::on_clear_clicked()//清空聊天记录
 {
     ui->textBrowser->clear();
 }
 
-bool chat::saveFile(const QString &fileName)//保存文件
+bool Chat::saveFile(const QString &fileName)//保存文件
 {
     QFile file(fileName);
     if(!file.open(QFile::WriteOnly | QFile::Text))
@@ -194,28 +238,124 @@ bool chat::saveFile(const QString &fileName)//保存文件
     return true;
 }
 
-void chat::on_textUnderline_clicked(bool checked)
+void Chat::on_textUnderline_clicked(bool checked)
 {
     ui->textEdit->setFontUnderline(checked);
     ui->textEdit->setFocus();
 }
 
-void chat::on_textcolor_clicked()
+void Chat::on_textcolor_clicked()
 {
-    color = QColorDialog::getColor(color,this);
-    if(color.isValid())
+    m_color = QColorDialog::getColor(m_color,this);
+    if(m_color.isValid())
     {
-        ui->textEdit->setTextColor(color);
+        ui->textEdit->setTextColor(m_color);
         ui->textEdit->setFocus();
     }
 }
 
-void chat::on_send_clicked()
+void Chat::on_send_clicked()
 {
     sendMessage();
+
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    ui->textBrowser->setCurrentFont(QFont("Times New Roman",12));
+
+    if (!m_canSend)
+    {
+        ui->textBrowser->setTextColor(Qt::red);
+        ui->textBrowser->append("[ " + QString("系统") +" ] "+ time);
+        ui->textBrowser->append("对方离线, 消息发送失败...");
+    }
+    else 
+    {
+        ui->textBrowser->setTextColor(Qt::blue);
+        ui->textBrowser->append("[ " + QString("本人") +" ] "+ time);
+        ui->textBrowser->append(m_message);
+    }
+}
+
+QString Chat::getUserAccount() const
+{
+    return m_targAccount;
+}
+
+void Chat::closeEvent( QCloseEvent * )
+{
+    if (!m_passiveClose)
+    {
+        sendExit();
+    }
+
+    emit exitTheChat();
+    LogManager::getSingleton().logDebug("发送关闭消息, 聊天界面即将关闭");
+}
+
+void Chat::requestMessage( ChatDataType* cDType )
+{
+
+    ///< 将基类指针转换为聊天信息实体指针
+    ChatMessageDataType* chatMDType = dynamic_cast<ChatMessageDataType*>(cDType);
+
+    ///< 判断是否发生转换异常
+    if (NULL == chatMDType)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
     QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     ui->textBrowser->setTextColor(Qt::blue);
     ui->textBrowser->setCurrentFont(QFont("Times New Roman",12));
-    ui->textBrowser->append("[ " + QString("本人") +" ] "+ time);
-    ui->textBrowser->append(m_message);
+    ui->textBrowser->append("[ " + m_targAccount +" ] "+ time);
+    ui->textBrowser->append(chatMDType->getMessage());
+
+    delete cDType;
+    cDType = NULL;
+}
+
+void Chat::requestFileName( ChatDataType* cDType )
+{
+
+}
+
+void Chat::requestExit()
+{
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    ui->textBrowser->setTextColor(Qt::red);
+    ui->textBrowser->setCurrentFont(QFont("Times New Roman",12));
+    ui->textBrowser->append("[ " + m_targAccount +" ] "+ time);
+    ui->textBrowser->append("对方已经离线!");
+    m_canSend = false;
+}
+
+void Chat::sendUDPMessage( ChatDataType* cDType )
+{
+    QByteArray data;
+    QDataStream out(&data,QIODevice::WriteOnly);
+
+    cDType->getData(out);
+
+    m_chatSocket->writeDatagram(data,data.length(),QHostAddress::QHostAddress(m_targIp), m_targPort);
+
+    delete cDType;
+    cDType = NULL;
+}
+
+void Chat::sendExit()
+{
+    ///< 创建退出实体
+    ChatDataType* cDType = m_cDTypeFactory.createChatMessageType(CM_EXIT);
+
+    ///< 将基类指针转换为消息实体指针
+    ChatExitType* cEType = dynamic_cast<ChatExitType*>(cDType);
+
+    ///< 判断是否发生转换异常
+    if (NULL == cEType)
+    {
+        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        assert(false);
+    }
+
+    sendUDPMessage(cDType);
 }

@@ -49,15 +49,16 @@ void LandingDataType::setData( QDataStream &dataStream )
 
 
 ///< LANDINGRESULTTYPE
-LandingResultType::LandingResultType( bool result )
-    : ComDataType(MT_LANDING_RESULT),
-    m_result(result)
+LandingResultType::LandingResultType( void )
+    : ComDataType(MT_LANDING_RESULT)
 {
 
 }
 
-LandingResultType::LandingResultType( void )
-    : ComDataType(MT_LANDING_RESULT)
+LandingResultType::LandingResultType( QString account, bool result )
+    : ComDataType(MT_LANDING_RESULT),
+    m_account(account),
+    m_result(result)
 {
 
 }
@@ -69,12 +70,12 @@ LandingResultType::~LandingResultType( void )
 
 void LandingResultType::getData( QDataStream &dataStream )
 {
-    dataStream << (qint32)m_msgType << m_result;
+    dataStream << (qint32)m_msgType << m_account << m_result;
 }
 
 void LandingResultType::setData( QDataStream &dataStream )
 {
-    dataStream >> m_result;
+    dataStream >> m_account >> m_result;
 }
 
 

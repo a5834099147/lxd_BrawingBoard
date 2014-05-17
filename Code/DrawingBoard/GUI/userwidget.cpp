@@ -265,6 +265,6 @@ void UserWidget::on_cellDoubleClicked( int row, int colume )
     {
         LogManager::getSingleton().logDebug("用户确认了同" + userAccount.toStdString() + "的交谈请求");
         emit chatRequest(userAccount);
-        QMessageBox::information(NULL, "提醒", "系统已经发送了您的会话请求, 请稍后...");
+        //QMessageBox::information(NULL, "提醒", "系统已经发送了您的会话请求, 请稍后...");
     }
 }
