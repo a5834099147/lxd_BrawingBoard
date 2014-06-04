@@ -6,19 +6,19 @@
 class Line : public Shape
 {
 public:
-  Line();
+    Line();
 
-  void save(QDataStream &dataStream);
-  void load(QDataStream &dataStream);
+    void save(QDataStream &dataStream);
+    void load(QDataStream &dataStream);
 
-  void setStart(QPoint e);
-  void setUnderway(QPoint e);
-  void paint(QPainter &painter);
+    void setStart(QPoint e);
+    void setUnderway(QPoint e);
+    void paint(QPainter &painter);
 
-  QString className()
-  {
-	  return "Line";
-  }
+    QString className()
+    {
+        return "Line";
+    }
 };
 
 #endif // LINE_H

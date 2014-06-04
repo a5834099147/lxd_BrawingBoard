@@ -63,11 +63,12 @@ private:
     QString m_message;
     QString m_targIp;
     QString m_targAccount;
-    QUdpSocket *m_chatSocket;
     qint32 m_localPort;
     qint32 m_targPort;
     bool m_passiveClose;
     bool m_canSend;
+
+    QUdpSocket *m_chatSocket;
 
     ChatDataTypeFactory m_cDTypeFactory;
 };

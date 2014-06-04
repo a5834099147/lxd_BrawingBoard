@@ -83,6 +83,7 @@ private:
     void CreatMenus();  
     void CreatUserDockWidget();
     void CreatSocket();
+    void CreatStatueBar();
     void LoginApp();
     void closeEvent(QCloseEvent *event);
     QString strippendName(const QString& fullFileName);

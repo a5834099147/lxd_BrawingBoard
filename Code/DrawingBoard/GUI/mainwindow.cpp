@@ -11,9 +11,6 @@
 MainWindow::MainWindow(QWidget *parent) :
 QMainWindow(parent), dataChange(false)
 {
-    QLabel *statusMsg = new QLabel;
-    statusBar()->addWidget(statusMsg);
-
     paintWidget = new PaintWidget(this);
     LogManager::getSingleton().logDebug("创建画板视图成功");
     setCentralWidget(paintWidget);
@@ -30,6 +27,8 @@ QMainWindow(parent), dataChange(false)
     LogManager::getSingleton().logDebug("创建 BRUSHSTYPE 控件成功");
     CreatFileAction();
     LogManager::getSingleton().logDebug("创建 FILE 控件成功");
+    CreatStatueBar();
+    LogManager::getSingleton().logDebug("创建 状态栏 成功");
     CreatMenus();
     LogManager::getSingleton().logDebug("创建菜单成功");
     CreatUserDockWidget();
@@ -39,6 +38,7 @@ QMainWindow(parent), dataChange(false)
     setCurrentFile(NULL);
     LogManager::getSingleton().logDebug("设置当前文件");
     CreatSocket();
+    LogManager::getSingleton().logDebug("与服务器创建连接");
     LoginApp();
 }
 
@@ -63,7 +63,7 @@ void MainWindow::LoginApp()
     LogManager::getSingleton().logDebug("画板程序登录中...");
     if (login_->exec() == false)
     {
-        LogManager::getSingleton().logError("程序登录失败");
+        LogManager::getSingleton().logError("程序登录失败, 程序退出");
         exit(0);
     }
     else
@@ -75,8 +75,10 @@ void MainWindow::LoginApp()
 void MainWindow::CreatToolsAction()
 {
     Toolsbar = this->addToolBar(tr("形状"));
+
+    ///< 将图形 ToolBar 放在界面的左边
     this->addToolBar(Qt::LeftToolBarArea, Toolsbar);
-    QActionGroup *group = new QActionGroup(Toolsbar);  
+    QActionGroup *group = new QActionGroup(Toolsbar);
 
     drawLineAction = new QAction("Line", Toolsbar);
     drawLineAction->setIcon(QIcon(":/直线.png"));
@@ -126,6 +128,7 @@ void MainWindow::CreatPenColourAction()
     QLabel* name = new QLabel(tr("线条颜色:"));
     penColorBar->addWidget(name);
 
+    ///< 创建组件组, 使组建之间互斥
     QActionGroup *group = new QActionGroup(penColorBar);
 
     colourPenBlack = new QAction("黑色", penColorBar);
@@ -323,6 +326,7 @@ void MainWindow::CreatUserDockWidget()
     userDockWidget_ = new QDockWidget(this);
     userDockWidget_->setWidget(userWidget_);
 
+    ///< 将悬浮窗口绑定在右边边缘位置
     addDockWidget(Qt::RightDockWidgetArea, userDockWidget_);
 
     login_ = new Login;
@@ -416,13 +420,18 @@ void MainWindow::CreatConnect()
         login_, SIGNAL(recive_register(bool)));
     connect(login_, SIGNAL(sand_login(std::string, std::string)),
         this, SLOT(sand_login(std::string, std::string)));
-    connect(login_, SIGNAL(sand_register(std::string, std::string, std::string, std::string)),
-        this, SLOT(sand_register(std::string, std::string, std::string, std::string))); 
+    connect(login_, SIGNAL(sand_register(std::string, std::string,
+                                         std::string, std::string)),
+        this, SLOT(sand_register(std::string, std::string, std::string,
+                                 std::string))); 
 
     /* 用户列表下放*/
-    connect(socket_, SIGNAL(recive_userList(std::string, std::string, std::string, bool, bool)),
-        userWidget_, SLOT(contentChanges(std::string, std::string, std::string, bool, bool)));
-    connect(userWidget_, SIGNAL(chatRequest(const QString&)), socket_, SLOT(sandRequestChat(const QString&)));
+    connect(socket_, SIGNAL(recive_userList(std::string, std::string,
+                                            std::string, bool, bool)),
+        userWidget_, SLOT(contentChanges(std::string, std::string,
+                                         std::string, bool, bool)));
+    connect(userWidget_, SIGNAL(chatRequest(const QString&)),
+            socket_, SLOT(sandRequestChat(const QString&)));
 }
 
 void MainWindow::on_openAction_triggered()
@@ -471,7 +480,8 @@ void MainWindow::on_saveAsAction_triggered()
         tr("画板文件(*.HB)"));
     if (!fileName.isEmpty())
     {
-        LogManager::getSingleton().logDebug((QString("保存画板文件成功, 文件名为: ") += fileName).toStdString());
+        LogManager::getSingleton().logDebug((QString("保存画板文件成功, 文件名为: ") 
+                                            += fileName).toStdString());
         emit writeFile(fileName);
         dataChange = false;
         setCurrentFile(fileName);
@@ -523,7 +533,7 @@ void MainWindow::on_saveAction_triggered()
     {
         LogManager::getSingleton().logDebug("文件保存成功");
         emit writeFile(curFile);
-        dataChange = false;		
+        dataChange = false;
         setCurrentFile(NULL);
     }
 }
@@ -532,10 +542,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (okToContinue())
     {
+        ///< 结束
         event->accept();
     }
     else 
     {
+        ///< 取消
         event->ignore();
     }
 }
@@ -685,7 +697,6 @@ bool MainWindow::winEvent(MSG *message, long *result)
     int msgType = message->message;
     if (msgType == WM_DEVICECHANGE)
     {
-        /*emit changeUsbState("检测到 WM_DEVICECHANGE 消息");*/
         LogManager::getSingleton().logDebug("系统检测到 WM_DEVICECHANGE　消息");
         PDEV_BROADCAST_HDR lpdb = (PDEV_BROADCAST_HDR)message->lParam;
         switch (message->wParam)
@@ -698,7 +709,8 @@ bool MainWindow::winEvent(MSG *message, long *result)
                 {
                     QString USBDisk = QString(this->FirstDriveFromMask(lpdbv->dbcv_unitmask));
                     emit changeUsbState(QString("找到USB存储设备: ") += USBDisk);
-                    LogManager::getSingleton().logDebug((QString("系统找到USB设备") += USBDisk).toStdString());
+                    LogManager::getSingleton().logDebug((QString("系统找到USB设备")
+                                                         += USBDisk).toStdString());
                 }
             }
             break;
@@ -712,7 +724,7 @@ bool MainWindow::winEvent(MSG *message, long *result)
                     LogManager::getSingleton().logDebug("USB设备被移除");
                 }
             }
-            break;				
+            break;
         }
     }
     return false;
@@ -735,7 +747,14 @@ void MainWindow::sand_login(std::string account, std::string password)
     socket_->landing_Data(account, password);
 }
 
-void MainWindow::sand_register(std::string account, std::string password, std::string userName, std::string pinYin)
+void MainWindow::sand_register(std::string account, std::string password,
+                               std::string userName, std::string pinYin)
 {
     socket_->sandRegister(account, password, userName, pinYin);
+}
+
+void MainWindow::CreatStatueBar()
+{
+    QLabel *statusMsg = new QLabel;
+    statusBar()->addWidget(statusMsg);
 }

@@ -7,22 +7,22 @@
 class Points : public Shape
 {
 public:
-  Points();
+    Points();
 
-  void save(QDataStream &dataStream);
-  void load(QDataStream &dataStream);
+    void save(QDataStream &dataStream);
+    void load(QDataStream &dataStream);
 
-  void setStart(QPoint e);
-  void paint(QPainter &painter);
-  void setUnderway(QPoint e);
+    void setStart(QPoint e);
+    void paint(QPainter &painter);
+    void setUnderway(QPoint e);
 
-  QString className()
-  {
-	  return "Points";
-  }
+    QString className()
+    {
+        return "Points";
+    }
 
 private:
-   QVector<QPoint> lines_;
+    QVector<QPoint> lines_;
 };
 
 #endif // POINTS_H

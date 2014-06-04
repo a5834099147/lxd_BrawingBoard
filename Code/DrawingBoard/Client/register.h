@@ -10,36 +10,36 @@ class QVBoxLayout;
 
 class Register : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	Register(QWidget *parent);
-	~Register();
+    Register(QWidget *parent);
+    ~Register();
 
 signals:
-	void sand_register(std::string account, std::string password, std::string userName, std::string yinYin);
-	void recive_register(bool result);
+    void sand_register(std::string account, std::string password, std::string userName, std::string yinYin);
+    void recive_register(bool result);
 
-private slots:
-	void on_registerB_clicked();
-	void on_register_recive(bool);
+    private slots:
+        void on_registerB_clicked();
+        void on_register_recive(bool);
 
 private:
-	QLabel* accountL_;
-	QLabel* userNameL_;
-	QLabel* passwordL_;
-	
-	QLineEdit* accountE_;
-	QLineEdit* userNameE_;
-	QLineEdit* passwordE_;	
+    QLabel* accountL_;
+    QLabel* userNameL_;
+    QLabel* passwordL_;
 
-	QPushButton* registerB_;	
-	QPushButton* cancelB_;
+    QLineEdit* accountE_;
+    QLineEdit* userNameE_;
+    QLineEdit* passwordE_;	
 
-	QVBoxLayout* layout_;	
+    QPushButton* registerB_;	
+    QPushButton* cancelB_;
 
-	void Initialize();
-	void createSlots();
+    QVBoxLayout* layout_;	
+
+    void Initialize();
+    void createSlots();
 };
 
 #endif // REGISTER_H

@@ -7,20 +7,27 @@
 
 const int PaintWidget::symbol = 1311515;
 
-PaintWidget::PaintWidget(QWidget *parent) :
-QWidget(parent), currShapeCode(Shape::Line),
-    m_shape(NULL), perm(false), penRoughNess(1),
-    penStyle(Qt::SolidLine), brushStyle(Qt::SolidPattern),
-    penColor(Qt::black), brushColor(Qt::white), isChanged(false)
+PaintWidget::PaintWidget(QWidget *parent) 
+    : QWidget(parent),
+    currShapeCode(Shape::Line),
+    m_shape(NULL),
+    perm(false),
+    penRoughNess(1),
+    penStyle(Qt::SolidLine),
+    brushStyle(Qt::SolidPattern),
+    penColor(Qt::black),
+    brushColor(Qt::white),
+    isChanged(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void PaintWidget::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);  
+    QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawRect(0, 0, size().width(), size().height());
+
     foreach (Shape *shape, shapeList) {
         shape->paint(painter);
     }
@@ -251,21 +258,21 @@ void PaintWidget::setBrushStyle(Shape::BrushStyle s)
 {
     switch(s)
     {
-    case Shape::SolidPattern    : brushStyle = Qt::SolidPattern;  break;
-    case Shape::Dense1Pattern   : brushStyle = Qt::Dense1Pattern;  break;
-    case Shape::Dense2Pattern   : brushStyle = Qt::Dense2Pattern;  break;
-    case Shape::Dense3Pattern   : brushStyle = Qt::Dense3Pattern;  break;
-    case Shape::Dense4Pattern   : brushStyle = Qt::Dense4Pattern;  break;
-    case Shape::Dense5Pattern   : brushStyle = Qt::Dense5Pattern;  break;
-    case Shape::Dense6Pattern   : brushStyle = Qt::Dense6Pattern;  break;
-    case Shape::Dense7Pattern   : brushStyle = Qt::Dense7Pattern;  break;
-    case Shape::HorPattern      : brushStyle = Qt::HorPattern;  break;
-    case Shape::VerPattern      : brushStyle = Qt::VerPattern;  break;
-    case Shape::CrossPattern    : brushStyle = Qt::CrossPattern;  break;
-    case Shape::BDiagPattern    : brushStyle = Qt::BDiagPattern;  break;
-    case Shape::FDiagPattern    : brushStyle = Qt::FDiagPattern;  break;
-    case Shape::DiagCrossPat    : brushStyle = Qt::DiagCrossPattern;  break;
-    case Shape::NoBrush         : brushStyle = Qt::NoBrush;  break;
+    case Shape::SolidPattern    : brushStyle = Qt::SolidPattern;    break;
+    case Shape::Dense1Pattern   : brushStyle = Qt::Dense1Pattern;   break;
+    case Shape::Dense2Pattern   : brushStyle = Qt::Dense2Pattern;   break;
+    case Shape::Dense3Pattern   : brushStyle = Qt::Dense3Pattern;   break;
+    case Shape::Dense4Pattern   : brushStyle = Qt::Dense4Pattern;   break;
+    case Shape::Dense5Pattern   : brushStyle = Qt::Dense5Pattern;   break;
+    case Shape::Dense6Pattern   : brushStyle = Qt::Dense6Pattern;   break;
+    case Shape::Dense7Pattern   : brushStyle = Qt::Dense7Pattern;   break;
+    case Shape::HorPattern      : brushStyle = Qt::HorPattern;      break;
+    case Shape::VerPattern      : brushStyle = Qt::VerPattern;      break;
+    case Shape::CrossPattern    : brushStyle = Qt::CrossPattern;    break;
+    case Shape::BDiagPattern    : brushStyle = Qt::BDiagPattern;    break;
+    case Shape::FDiagPattern    : brushStyle = Qt::FDiagPattern;    break;
+    case Shape::DiagCrossPat    : brushStyle = Qt::DiagCrossPattern;break;
+    case Shape::NoBrush         : brushStyle = Qt::NoBrush;         break;
     }
 }
 

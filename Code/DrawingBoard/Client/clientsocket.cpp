@@ -6,6 +6,7 @@
 #include <cassert>
 #include <QtNetwork/QHostAddress>
 #include <string>
+
 #include <QtGui/QMessageBox>
 
 ClientSocket::ClientSocket(QObject *parent)
