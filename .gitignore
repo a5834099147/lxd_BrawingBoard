@@ -3,3 +3,6 @@ Release
 Debug
 /Code/Output/*.log
 /Code/DrawingBoard/*.log
+/相关文档/用例流程
+/相关文档/类图
+/Code/Output/test.db
