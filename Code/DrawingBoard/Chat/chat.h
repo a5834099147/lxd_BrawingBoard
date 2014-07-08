@@ -1,4 +1,4 @@
-#ifndef CHAT_H
+ï»¿#ifndef CHAT_H
 #define CHAT_H
 
 #include <QDialog>
@@ -28,7 +28,7 @@ signals:
     void exitTheChat();
 
 private:
-    bool saveFile(const QString& fileName);//±£´æÁÄÌì¼ÇÂ¼
+    bool saveFile(const QString& fileName);//ä¿å­˜èŠå¤©è®°å½•
     QString getMessage();
     QString getIP();
     
@@ -41,7 +41,7 @@ private:
     void sendUDPMessage(ChatDataType* cDType);
 
 protected:
-    bool eventFilter(QObject *target, QEvent *event); //ÊÂ¼ş¹ıÂËÆ÷
+    bool eventFilter(QObject *target, QEvent *event); //äº‹ä»¶è¿‡æ»¤å™¨
     void closeEvent(QCloseEvent *);
 
 private slots:
@@ -59,7 +59,7 @@ private slots:
 
 private:
     Ui::chat *ui;
-    QColor m_color;//ÑÕÉ«
+    QColor m_color;//é¢œè‰²
     QString m_message;
     QString m_targIp;
     QString m_targAccount;

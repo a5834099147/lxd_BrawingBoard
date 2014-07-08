@@ -1,4 +1,4 @@
-#include "serversocket.h"
+ï»¿#include "serversocket.h"
 #include "serverthread.h"
 #include "LogManager.h"
 #include "CustomEventType.h"
@@ -7,6 +7,9 @@
 #include <QCoreApplication>
 #include <QHostAddress>
 #include <cassert>
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 quint32 ServerSocket::thrd_fd_ = 0;
 quint32 ServerSocket::port_fd_ = 49152;
@@ -31,25 +34,25 @@ ServerSocket::~ServerSocket()
 
 bool ServerSocket::start()
 {
-    ///< ¿ªÆô·şÎñ, µ÷ÓÃ¼àÌı
+    ///< å¼€å¯æœåŠ¡, è°ƒç”¨ç›‘å¬
     if (!listen(QHostAddress::Any, m_port))
     {
-        LogManager::getSingleton().logAlert("ÏµÍ³µ÷ÓÃ¼àÌıÊ§°Ü");
-        LogManager::getSingleton().logDebug("Ê§°ÜÔ­Òò:" + errorString().toStdString());
+        LogManager::getSingleton().logAlert("ç³»ç»Ÿè°ƒç”¨ç›‘å¬å¤±è´¥");
+        LogManager::getSingleton().logDebug("å¤±è´¥åŸå› :" + errorString().toStdString());
         return false;
     }
     else 
     {
-        LogManager::getSingleton().logDebug("ÏµÍ³µ÷ÓÃ¼àÌı³É¹¦");
+        LogManager::getSingleton().logDebug("ç³»ç»Ÿè°ƒç”¨ç›‘å¬æˆåŠŸ");
         return true;
     }
 }
 
 void ServerSocket::incomingConnection(int sockfd)
 {
-    ///< ¿Í»§¶ËÓĞSOCKET¼ÓÈë
+    ///< å®¢æˆ·ç«¯æœ‰SOCKETåŠ å…¥
     ServerThread* thrd = new ServerThread(++thrd_fd_, sockfd);
-    ///< °ó¶¨ÍË³öÏûÏ¢ÓÚ¸ÃÏß³Ì, µ±Ïß³ÌÍË³öÊ±µ÷ÓÃ¸Ã·½·¨
+    ///< ç»‘å®šé€€å‡ºæ¶ˆæ¯äºè¯¥çº¿ç¨‹, å½“çº¿ç¨‹é€€å‡ºæ—¶è°ƒç”¨è¯¥æ–¹æ³•
     connect(thrd, SIGNAL(exiting(quint32)), this, SLOT(thrdExiting(quint32)));
     connect(thrd, SIGNAL(exiting(quint32)), this, SLOT(logout(quint32)));
     connect(thrd, SIGNAL(login(const QString&)), this, SLOT(login(const QString&)));
@@ -58,13 +61,13 @@ void ServerSocket::incomingConnection(int sockfd)
     connect(thrd, SIGNAL(chatRequestResult(const QString&, bool)),
         this, SLOT(chatRequestResult(const QString&, bool)));
 
-    ///< ½«Ïß³Ì¼ÓÈëµ½Ïß³ÌÁ´±íÖĞ
+    ///< å°†çº¿ç¨‹åŠ å…¥åˆ°çº¿ç¨‹é“¾è¡¨ä¸­
     m_mutex->lock();
     m_threads.push_back(thrd);
     m_mutex->unlock();
 
-    ///< ¿ªÆôÏß³Ì
-    LogManager::getSingleton().logDebug("ĞÂ×÷ÒµÏß³Ì¿ªÆô");
+    ///< å¼€å¯çº¿ç¨‹
+    LogManager::getSingleton().logDebug("æ–°ä½œä¸šçº¿ç¨‹å¼€å¯");
     thrd->start();
 }
 
@@ -76,8 +79,8 @@ void ServerSocket::thrdExiting(quint32 thrdfd)
     {
         if (m_threads.at(i)->getThrdfd() == thrdfd)
         {
-            LogManager::getSingleton().logDebug("É¾³ıÏÖÓĞµÚ " + 
-                        boost::lexical_cast<std::string>(i + 1) + "¸öÏß³Ì");
+            LogManager::getSingleton().logDebug("åˆ é™¤ç°æœ‰ç¬¬ " + 
+                        boost::lexical_cast<std::string>(i + 1) + "ä¸ªçº¿ç¨‹");
             m_threads.removeAt(i);
             break;
         }
@@ -98,7 +101,7 @@ void ServerSocket::logout( quint32 thrdfd )
         {
             targetThred = iter.value();
             targetUser = iter.key();
-            LogManager::getSingleton().logDebug("ÕÒµ½µÇ³öµÄÓÃ»§Ïß³Ì, ÓÃ»§ÃûÎª: " +
+            LogManager::getSingleton().logDebug("æ‰¾åˆ°ç™»å‡ºçš„ç”¨æˆ·çº¿ç¨‹, ç”¨æˆ·åä¸º: " +
                                                 targetUser.toStdString());
             m_userHash.remove(iter.key());
         }
@@ -107,7 +110,7 @@ void ServerSocket::logout( quint32 thrdfd )
 
     if (targetThred == NULL)
     {
-        LogManager::getSingleton().logWarn("³öÏÖÃ»ÓĞµÇÂ½µÄÓÃ»§ÍË³öÏµÍ³");
+        LogManager::getSingleton().logWarn("å‡ºç°æ²¡æœ‰ç™»é™†çš„ç”¨æˆ·é€€å‡ºç³»ç»Ÿ");
         return;
     }
 
@@ -124,16 +127,16 @@ void ServerSocket::login( const QString& userName )
     ServerThread* thread = qobject_cast<ServerThread*>(sender());
 
     m_mutex->lock();
-    ///< Ã»ÓĞÕÒµ½¸ÃÏß³Ì
+    ///< æ²¡æœ‰æ‰¾åˆ°è¯¥çº¿ç¨‹
     assert(-1 != m_threads.indexOf(thread));
     m_mutex->unlock(); 
 
-    LogManager::getSingleton().logDebug("Ö÷Ïß³Ì»ñµÃµÇÂ½ĞÅÏ¢,ÓÃ»§ÃûÎª: " + 
+    LogManager::getSingleton().logDebug("ä¸»çº¿ç¨‹è·å¾—ç™»é™†ä¿¡æ¯,ç”¨æˆ·åä¸º: " + 
                                         userName.toStdString());
     m_mutex->lock();
     m_userHash.insert(userName, thread);
 
-    ///< ÏòËùÓĞÔÚÏßÓÃ»§·¢ËÍ¸ü¸Ä×´Ì¬
+    ///< å‘æ‰€æœ‰åœ¨çº¿ç”¨æˆ·å‘é€æ›´æ”¹çŠ¶æ€
     QHashIterator<QString, ServerThread*> iter(m_userHash);
     while (iter.hasNext())
     {
@@ -141,7 +144,7 @@ void ServerSocket::login( const QString& userName )
         QCoreApplication::postEvent(targetThread, new ChangeTheList(userName, true));
     }
 
-    ///< ÏòĞÂ¼ÓÈëÓÃ»§Ïß³Ì·¢ËÍÏÖÓĞÓÃ»§µÇÂ½×´¿ö
+    ///< å‘æ–°åŠ å…¥ç”¨æˆ·çº¿ç¨‹å‘é€ç°æœ‰ç”¨æˆ·ç™»é™†çŠ¶å†µ
     iter.toFront();
     while (iter.hasNext())
     {
@@ -157,18 +160,18 @@ void ServerSocket::chatRequest( const QString& account )
     ServerThread* thread = qobject_cast<ServerThread*>(sender());
 
     m_mutex->lock();
-    ///< Ã»ÓĞÕÒµ½¸ÃÏß³Ì
+    ///< æ²¡æœ‰æ‰¾åˆ°è¯¥çº¿ç¨‹
     assert(-1 != m_threads.indexOf(thread));
     QString requestAccount = m_userHash.key(thread, "");
     m_mutex->unlock(); 
 
     if (requestAccount == "")
     {
-        LogManager::getSingleton().logAlert("Ö÷Ïß³Ì»ñµÃÁÄÌìÇëÇó, µ«ÊÇÎŞ·¨È·ÈÏ·¢ËÍÇëÇóµÄÓÃ»§Ãû");
+        LogManager::getSingleton().logAlert("ä¸»çº¿ç¨‹è·å¾—èŠå¤©è¯·æ±‚, ä½†æ˜¯æ— æ³•ç¡®è®¤å‘é€è¯·æ±‚çš„ç”¨æˆ·å");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("Ö÷Ïß³Ì»ñµÃÁÄÌìÇëÇó, ÉêÇëÓÃ»§ÃûÎª: " + 
+    LogManager::getSingleton().logDebug("ä¸»çº¿ç¨‹è·å¾—èŠå¤©è¯·æ±‚, ç”³è¯·ç”¨æˆ·åä¸º: " + 
         requestAccount.toStdString());
     m_mutex->lock();
     ServerThread* targetThread = m_userHash.value(account, NULL);
@@ -176,8 +179,8 @@ void ServerSocket::chatRequest( const QString& account )
 
     if (NULL == targetThread)
     {
-        LogManager::getSingleton().logAlert("Ö÷Ïß³Ì»ñµÃÁÄÌìÇëÇó, µ«ÊÇÎŞ·¨È·ÈÏ" 
-                    + account.toStdString() + "¶Ô·½µÄÌ×½Ó×ÖÏß³Ì");
+        LogManager::getSingleton().logAlert("ä¸»çº¿ç¨‹è·å¾—èŠå¤©è¯·æ±‚, ä½†æ˜¯æ— æ³•ç¡®è®¤" 
+                    + account.toStdString() + "å¯¹æ–¹çš„å¥—æ¥å­—çº¿ç¨‹");
         assert(false);
     }
 
@@ -189,18 +192,18 @@ void ServerSocket::chatRequestResult( const QString& account, bool result )
     ServerThread* thread = qobject_cast<ServerThread*>(sender());
 
     m_mutex->lock();
-    ///< Ã»ÓĞÕÒµ½¸ÃÏß³Ì
+    ///< æ²¡æœ‰æ‰¾åˆ°è¯¥çº¿ç¨‹
     assert(-1 != m_threads.indexOf(thread));
     QString requestAccount = m_userHash.key(thread, "");
     m_mutex->unlock(); 
 
     if (requestAccount == "")
     {
-        LogManager::getSingleton().logAlert("Ö÷Ïß³Ì»ñµÃÁÄÌì½á¹û·¢ËÍÇëÇó, µ«ÊÇÎŞ·¨È·ÈÏ·¢ËÍÇëÇóµÄÓÃ»§Ãû");
+        LogManager::getSingleton().logAlert("ä¸»çº¿ç¨‹è·å¾—èŠå¤©ç»“æœå‘é€è¯·æ±‚, ä½†æ˜¯æ— æ³•ç¡®è®¤å‘é€è¯·æ±‚çš„ç”¨æˆ·å");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("Ö÷Ïß³Ì»ñµÃÁÄÌì½á¹û·¢ËÍÇëÇó, ÉêÇëÓÃ»§ÃûÎª: " + 
+    LogManager::getSingleton().logDebug("ä¸»çº¿ç¨‹è·å¾—èŠå¤©ç»“æœå‘é€è¯·æ±‚, ç”³è¯·ç”¨æˆ·åä¸º: " + 
         requestAccount.toStdString());
     m_mutex->lock();
     ServerThread* targetThread = m_userHash.value(account, NULL);
@@ -208,8 +211,8 @@ void ServerSocket::chatRequestResult( const QString& account, bool result )
 
     if (NULL == targetThread)
     {
-        LogManager::getSingleton().logAlert("Ö÷Ïß³Ì»ñµÃÁÄÌì½á¹û·¢ËÍÇëÇó, µ«ÊÇÎŞ·¨È·ÈÏ" 
-            + account.toStdString() + "¶Ô·½µÄÌ×½Ó×ÖÏß³Ì");
+        LogManager::getSingleton().logAlert("ä¸»çº¿ç¨‹è·å¾—èŠå¤©ç»“æœå‘é€è¯·æ±‚, ä½†æ˜¯æ— æ³•ç¡®è®¤" 
+            + account.toStdString() + "å¯¹æ–¹çš„å¥—æ¥å­—çº¿ç¨‹");
         assert(false);
     }
 
@@ -217,7 +220,7 @@ void ServerSocket::chatRequestResult( const QString& account, bool result )
 
     if (result)
     {
-        ///< »ñµÃÁ½¸öÍ¨ĞÅ¶Ë¿Ú
+        ///< è·å¾—ä¸¤ä¸ªé€šä¿¡ç«¯å£
         quint32 port1, port2;
         getPort(port1, port2);
 

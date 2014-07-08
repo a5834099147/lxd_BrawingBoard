@@ -9,6 +9,9 @@
 #include <QtCore/QTextCodec>
 #include <QMessageBox>
 
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
+
 int main(int argc, char *argv[])
 {
     ///< 各类资源的初始化
@@ -18,10 +21,6 @@ int main(int argc, char *argv[])
     }
 
     QApplication a(argc, argv);
-
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
 
     LogManager::getSingleton().logDebug("设置程序的字体为 GBK");
 

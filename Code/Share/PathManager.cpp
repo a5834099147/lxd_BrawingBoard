@@ -1,8 +1,12 @@
-#include <Windows.h>
+ï»¿#include <Windows.h>
 #include <assert.h>
+#include "Utility.h"
 
 #include "LogManager.h"
 #include "PathManager.h"
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 template<> PathManager* Singleton<PathManager>::m_Singleton = 0;
 
@@ -18,22 +22,6 @@ PathManager::~PathManager(void)
 std::string PathManager::getConfigurePath()
 {
     return getExecuteDir() + "Configure\\";
-}
-
-std::string PathManager::getExecuteDir()
-{
-    char szPath[256];
-    if (!GetModuleFileNameA(NULL, szPath, 256))
-    {
-        LogManager::getSingletonPtr()->logError("»ñÈ¡µ±Ç°ÔËÐÐÄ¿Â¼Ê±³ö´í");
-        assert(false);
-    }
-
-    std::string path(szPath);
-
-    ///< ÕÒµ½µ±Ç° exe ÔËÐÐ³ÌÐòµÄÂ·¾¶ºó²Ã¼ôµ½ÉÏ¼¶Ä¿Â¼
-    path = path.substr(0, path.rfind("\\") + 1);
-    return path;
 }
 
 std::string PathManager::getPlottingLogConfigFile()

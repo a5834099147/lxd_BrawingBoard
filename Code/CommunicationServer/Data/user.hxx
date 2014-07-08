@@ -1,4 +1,4 @@
-#ifndef USER_HXX
+﻿#ifndef USER_HXX
 #define USER_HXX
 
 #include <odb/core.hxx>

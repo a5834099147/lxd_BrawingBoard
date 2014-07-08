@@ -1,12 +1,20 @@
 ﻿#include "mainwindow.h"
 #include "login.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QMenu>
-#include <QtGui/QComboBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QAction>
-#include <QtGui/QFileDialog>
+#include <QLabel>
+#include <QMenu>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QAction>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QToolBar>
+#include <QMenuBar>
+#include <QDockWidget>
+#include <QStatusBar>
+
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
 
 MainWindow::MainWindow(QWidget *parent) :
 QMainWindow(parent), dataChange(false)

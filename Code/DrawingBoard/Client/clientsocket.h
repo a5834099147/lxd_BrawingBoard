@@ -1,4 +1,4 @@
-#ifndef CLIENTSOCKET_H
+﻿#ifndef CLIENTSOCKET_H
 #define CLIENTSOCKET_H
 
 #include <QtNetwork/QTcpSocket>

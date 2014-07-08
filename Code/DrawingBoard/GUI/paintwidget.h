@@ -1,14 +1,14 @@
 ﻿#ifndef PAINTWIDGET_H
 #define PAINTWIDGET_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QColor>
+#include <QWidget>
+#include <QColor>
 
 #include "shape.h"
 #include "line.h"
 #include "rect.h"
 #include "round.h"
-#include "roundrect.h"
+#include "FilletRect.h"
 #include "points.h"
 
 class PaintWidget : public QWidget

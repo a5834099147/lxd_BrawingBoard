@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 using namespace std;
 
 class MyChiToLetter
@@ -6,18 +6,18 @@ class MyChiToLetter
 public:
 	MyChiToLetter();
 	~MyChiToLetter();
-	//·Ö¸ô·û
+	//åˆ†éš”ç¬¦
 	bool m_LetterEnd;
-	//TRUE:µÃµ½Ê××ÖÄ¸´óĞ´
-	//FALSE:µÃµ½Ê××ÖÄ¸Ğ¡Ğ´
+	//TRUE:å¾—åˆ°é¦–å­—æ¯å¤§å†™
+	//FALSE:å¾—åˆ°é¦–å­—æ¯å°å†™
 	bool m_blnFirstBig;
-	//TRUE:µÃµ½È«²¿´óĞ´
-	//FALSE:µÃµ½³ıÈ¥Ê×Æ´ÒôµÄËùÓĞĞ¡Ğ´
+	//TRUE:å¾—åˆ°å…¨éƒ¨å¤§å†™
+	//FALSE:å¾—åˆ°é™¤å»é¦–æ‹¼éŸ³çš„æ‰€æœ‰å°å†™
 	bool m_blnAllBiG;
-	//True:µÃµ½È«²¿Æ´Òô
-	//FALSE:µÃµ½Ê×Æ´Òô
+	//True:å¾—åˆ°å…¨éƒ¨æ‹¼éŸ³
+	//FALSE:å¾—åˆ°é¦–æ‹¼éŸ³
 	bool m_blnSimaple;
-	//·µ»ØÆ´Òô
+	//è¿”å›æ‹¼éŸ³
 	string GetLetter(const string& strText);
 private:
     string FindLetter(int nCode);

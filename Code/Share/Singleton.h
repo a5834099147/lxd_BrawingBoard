@@ -1,17 +1,17 @@
-#ifndef _SINGLETON_H__
+ï»¿#ifndef _SINGLETON_H__
 #define _SINGLETON_H__
 
 #include <cassert>
 
-///< Ä£°åÀàÊµÏÖµ¥¼þÀàµÄ´´½¨
+///< æ¨¡æ¿ç±»å®žçŽ°å•ä»¶ç±»çš„åˆ›å»º
 template <typename T>
 class Singleton
 {
 private:
-    ///< ½ûÖ¹¸´ÖÆ¹¹Ôìº¯Êý
+    ///< ç¦æ­¢å¤åˆ¶æž„é€ å‡½æ•°
     Singleton(const Singleton<T>&);
 
-    ///< ½ûÖ¹¸³Öµ¹¹Ôìº¯Êý
+    ///< ç¦æ­¢èµ‹å€¼æž„é€ å‡½æ•°
     Singleton& operator = (const Singleton<T> &);
 
 protected:

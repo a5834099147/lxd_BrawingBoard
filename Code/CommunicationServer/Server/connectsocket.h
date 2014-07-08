@@ -1,4 +1,4 @@
-#ifndef CONNECTSOCKET_H
+﻿#ifndef CONNECTSOCKET_H
 #define CONNECTSOCKET_H
 #include "common.h"
 #include "ComDataTypeFactory.h"

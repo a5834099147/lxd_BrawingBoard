@@ -1,8 +1,8 @@
-#ifndef POINTS_H
+﻿#ifndef POINTS_H
 #define POINTS_H
 
 #include "shape.h"
-#include <QtGui/QPolygonF>
+#include <QPolygonF>
 
 class Points : public Shape
 {

@@ -1,11 +1,10 @@
-#ifndef UserWidget_H
+﻿#ifndef UserWidget_H
 #define UserWidget_H
 
 #include <QWidget>
 #include <vector>
 #include <windows.h>
 #include <dbt.h>
-#include <QtDBus/QDBusInterface>
 
 #define DBUS_HAL_SERVICE		"org.freedesktop.Hal"
 #define DBUS_HAL_PATH              "/org/freedesktop/Hal/Manager"  

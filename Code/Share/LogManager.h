@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef __LogManager_H__
 #define __LogManager_H__
@@ -7,7 +7,7 @@
 #include "SmartPointer.h"
 #include "Singleton.h"
 
-/// ÈÕÖ¾¹ÜÀíÀà
+/// æ—¥å¿—ç®¡ç†ç±»
 class LogManager : public Singleton<LogManager>
 {
 public:
@@ -15,41 +15,41 @@ public:
 
     ~LogManager();
 
-    /// »ñÈ¡µ¥¼şÀàµÄÊµÀı¶ÔÏñ
+    /// è·å–å•ä»¶ç±»çš„å®ä¾‹å¯¹åƒ
     static LogManager& getSingleton();
 
-    /// »ñÈ¡µ¥¼şÀàµÄÊµÀıÖ¸Õë
+    /// è·å–å•ä»¶ç±»çš„å®ä¾‹æŒ‡é’ˆ
     static LogManager* getSingletonPtr();
 
 public:
-    /// ´ÓÅäÖÃÎÄ¼şÖĞ´´½¨ÈÕÖ¾Àà
+    /// ä»é…ç½®æ–‡ä»¶ä¸­åˆ›å»ºæ—¥å¿—ç±»
     bool createLog(std::string propertyFile);
 
-    /// Êä³öÏûÏ¢
+    /// è¾“å‡ºæ¶ˆæ¯
     void logMessage(const std::string& messge, LogMessageLevel level = LML_DEBUG);
 
-    /// Êä³ö½ô¼±ÏûÏ¢
+    /// è¾“å‡ºç´§æ€¥æ¶ˆæ¯
     void logEmerg(const std::string& messge){logMessage(messge, LML_EMERG);}
 
     void logAlert(const std::string& messge){logMessage(messge, LML_ALERT);}
 
-    /// Êä³ö´íÎóÏûÏ¢
+    /// è¾“å‡ºé”™è¯¯æ¶ˆæ¯
     void logError(const std::string& messge){logMessage(messge, LML_ERROR);}
 
-    /// Êä³ö¾¯¸æÏûÏ¢
+    /// è¾“å‡ºè­¦å‘Šæ¶ˆæ¯
     void logWarn(const std::string& messge){logMessage(messge, LML_WARN);}
 
-    /// Êä³öµ÷ÊÔĞÅÏ¢
+    /// è¾“å‡ºè°ƒè¯•ä¿¡æ¯
     void logDebug(const std::string& messge){logMessage(messge, LML_DEBUG);}
 
 private:
-    /// ÊÍ·ÅÈÕÖ¾Ïà¹Ø×ÊÔ´
+    /// é‡Šæ”¾æ—¥å¿—ç›¸å…³èµ„æº
     void releaseLog();
 
 private:
     typedef std::vector<SharePtr<Log>::type> LogList;
 
-    /// ±£´æËùÓĞµÄÈÕÖ¾
+    /// ä¿å­˜æ‰€æœ‰çš„æ—¥å¿—
     LogList m_Logs;
 };
 

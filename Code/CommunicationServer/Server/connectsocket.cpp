@@ -1,4 +1,4 @@
-#include "connectsocket.h"
+ï»¿#include "connectsocket.h"
 #include "ComDataType.h"
 #include "odb_user.h"
 #include "LogManager.h"
@@ -8,6 +8,9 @@
 #include <QDataStream>
 #include <string>
 #include <QHostAddress>
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 ConnectSocket::ConnectSocket(QObject *parent)
     : QTcpSocket(parent)
@@ -24,22 +27,22 @@ ConnectSocket::~ConnectSocket()
 void ConnectSocket::receiveData()
 {
 
-    ///< ½ÓÊÜÏûÏ¢
-    LogManager::getSingleton().logDebug("·şÎñÆ÷×¼±¸½ÓÊÕÊı¾İ");
+    ///< æ¥å—æ¶ˆæ¯
+    LogManager::getSingleton().logDebug("æœåŠ¡å™¨å‡†å¤‡æ¥æ”¶æ•°æ®");
 
-    ///< ÉèÖÃÁ÷ÎªÖ»¶Á
+    ///< è®¾ç½®æµä¸ºåªè¯»
     QDataStream receive(this);
-    ///< ÉèÖÃÊı¾İÁ÷µÄ°æ±¾, ¿Í»§¶ËÓë·şÎñ¶ËÏàÍ¬
+    ///< è®¾ç½®æ•°æ®æµçš„ç‰ˆæœ¬, å®¢æˆ·ç«¯ä¸æœåŠ¡ç«¯ç›¸åŒ
     receive.setVersion(QDataStream::Qt_4_8);
 
-    ///< ¶ÁÈ¡Êı¾İ´óĞ¡
+    ///< è¯»å–æ•°æ®å¤§å°
     qint32 reciveSize = 0;
     receive >> reciveSize;
 
-    LogManager::getSingleton().logDebug("ÊÕµ½·şÎñÆ÷·¢À´ĞÅÏ¢, ·â×°Ê±Êı¾İ´óĞ¡Îª: " +
+    LogManager::getSingleton().logDebug("æ”¶åˆ°æœåŠ¡å™¨å‘æ¥ä¿¡æ¯, å°è£…æ—¶æ•°æ®å¤§å°ä¸º: " +
         boost::lexical_cast<std::string>(reciveSize));
 
-    ///< ¶ÁÈ¡ÏûÏ¢ÀàĞÍ
+    ///< è¯»å–æ¶ˆæ¯ç±»å‹
     MsgType msgType;
     receive >> (qint32&)msgType;
 
@@ -51,13 +54,13 @@ void ConnectSocket::receiveData()
 
 void ConnectSocket::requestLandingData(ComDataType* data)
 {
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªµÇÂ½½á¹ûÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºç™»é™†ç»“æœå®ä½“æŒ‡é’ˆ
     LandingDataType* landingData = dynamic_cast<LandingDataType*>(data);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == landingData)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -86,13 +89,13 @@ void ConnectSocket::requestSendMessage_Data(ComDataType* /*data*/)
 
 void ConnectSocket::requestRegister(ComDataType* data)
 {
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªµÇÂ½½á¹ûÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºç™»é™†ç»“æœå®ä½“æŒ‡é’ˆ
     RegisterDataType* registerData = dynamic_cast<RegisterDataType*>(data);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == registerData)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -109,16 +112,16 @@ void ConnectSocket::requestRegister(ComDataType* data)
 void ConnectSocket::sandLogin_result(const QString& userAccount, bool result)
 {
 
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_LANDING_RESULT);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»Îª×¢²áÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºæ³¨å†Œå®ä½“æŒ‡é’ˆ
     LandingResultType* landingResult = dynamic_cast<LandingResultType*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == landingResult)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
     
@@ -129,11 +132,11 @@ void ConnectSocket::sandLogin_result(const QString& userAccount, bool result)
 
     if (result)
     {
-        LogManager::getSingleton().logDebug("µÇÂ½»úµØÖ·Îª: " + 
-                    peerAddress().toString().toStdString() + "¶Ë¿ÚÎª: " + 
+        LogManager::getSingleton().logDebug("ç™»é™†æœºåœ°å€ä¸º: " + 
+                    peerAddress().toString().toStdString() + "ç«¯å£ä¸º: " + 
                     boost::lexical_cast<std::string>(peerPort()));
-        LogManager::getSingleton().logDebug("·şÎñÆ÷µØÖ·Îª: " + 
-            localAddress().toString().toStdString() + "¶Ë¿ÚÎª: " + 
+        LogManager::getSingleton().logDebug("æœåŠ¡å™¨åœ°å€ä¸º: " + 
+            localAddress().toString().toStdString() + "ç«¯å£ä¸º: " + 
             boost::lexical_cast<std::string>(localPort()));
         requestUserList();
     }
@@ -147,16 +150,16 @@ QString ConnectSocket::getPeerAddress()
 void ConnectSocket::sandRigister_result(bool reslut)
 {
 
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_REGISTER_RESULT);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»Îª×¢²áÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºæ³¨å†Œå®ä½“æŒ‡é’ˆ
     RegisterResultType* registerResult = dynamic_cast<RegisterResultType*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == registerResult)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -178,16 +181,16 @@ void ConnectSocket::sandUserList(std::string account, std::string userName,
                                  std::string userPinyin, bool on_line, bool isUpdate)
 {
 
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_RETURNTHELIST_DATA);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»Îª×¢²áÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºæ³¨å†Œå®ä½“æŒ‡é’ˆ
     ReturnTheListDataType* returnTheListData = dynamic_cast<ReturnTheListDataType*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == returnTheListData)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -203,16 +206,16 @@ void ConnectSocket::sandUserList(std::string account, std::string userName,
 
 void ConnectSocket::sendChatRequest( QString& account )
 {
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_DATA);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÁÄÌìÇëÇóÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºèŠå¤©è¯·æ±‚æŒ‡é’ˆ
     ChatRequestDataType* chatRequestData = dynamic_cast<ChatRequestDataType*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == chatRequestData)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -225,16 +228,16 @@ void ConnectSocket::sendOpenChatPort( QString userName, QString targAddress,
     quint32 localPort, quint32 targPort )
 {
 
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_OPENCHATSPORT);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»Îª¿ªÊ¼ÁÄÌìÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºå¼€å§‹èŠå¤©æŒ‡é’ˆ
     OpenChatsPort* openChatsPort = dynamic_cast<OpenChatsPort*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == openChatsPort)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -250,16 +253,16 @@ void ConnectSocket::sendOpenChatPort( QString userName, QString targAddress,
 void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
 {
 
-    ///< ´´½¨ĞÅÏ¢×¢²áÊµÌå
+    ///< åˆ›å»ºä¿¡æ¯æ³¨å†Œå®ä½“
     ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_RESULT);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÁÄÌìÇëÇóÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºèŠå¤©è¯·æ±‚æŒ‡é’ˆ
     ChatRequestResultType* chatRequestResult = dynamic_cast<ChatRequestResultType*>(com);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == chatRequestResult)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -271,35 +274,35 @@ void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
 
 void ConnectSocket::sandData(ComDataType* data)
 {
-    ///< ĞèÒª·¢ËÍµÄ×Ö½ÚĞò
+    ///< éœ€è¦å‘é€çš„å­—èŠ‚åº
     QByteArray block;
-    ///< ÉèÖÃÁ÷ÎªÖ»Ğ´
+    ///< è®¾ç½®æµä¸ºåªå†™
     QDataStream sand(&block, QIODevice::WriteOnly);
-    ///< ÉèÖÃÊı¾İÁ÷µÄ°æ±¾, ¿Í»§¶ËÓë·şÎñ¶ËÏàÍ¬
+    ///< è®¾ç½®æ•°æ®æµçš„ç‰ˆæœ¬, å®¢æˆ·ç«¯ä¸æœåŠ¡ç«¯ç›¸åŒ
     sand.setVersion(QDataStream::Qt_4_8);
 
-    ///< ÉèÖÃ·¢ËÍ³¤¶È³õÊ¼ÖµÎª0
+    ///< è®¾ç½®å‘é€é•¿åº¦åˆå§‹å€¼ä¸º0
     sand << (qint32) 0;
-    ///< ÉèÖÃ·¢ËÍµÄÄÚÈİ
+    ///< è®¾ç½®å‘é€çš„å†…å®¹
     data->getData(sand);
-    ///< »Øµ½×Ö½ÚÁ÷ÆğÊ¼Î»ÖÃ
+    ///< å›åˆ°å­—èŠ‚æµèµ·å§‹ä½ç½®
     sand.device()->seek(0);
-    ///< ÖØÖÃ×Ö½ÚÁ÷³¤¶È
+    ///< é‡ç½®å­—èŠ‚æµé•¿åº¦
     sand << (qint32)(block.size() - sizeof(qint32));
 
-    LogManager::getSingleton().logDebug("×¼±¸·¢ËÍÊı¾İ: Êı¾İ´óĞ¡Îª: " + 
+    LogManager::getSingleton().logDebug("å‡†å¤‡å‘é€æ•°æ®: æ•°æ®å¤§å°ä¸º: " + 
     boost::lexical_cast<std::string>(block.size()));
 
     int sandSize = write(block);
 
-    LogManager::getSingleton().logDebug("·¢ËÍÊı¾İ½øÈë»º³åÇø: Êı¾İ´óĞ¡Îª: " + 
+    LogManager::getSingleton().logDebug("å‘é€æ•°æ®è¿›å…¥ç¼“å†²åŒº: æ•°æ®å¤§å°ä¸º: " + 
     boost::lexical_cast<std::string>(sandSize));
 
     waitForBytesWritten();
 
-    LogManager::getSingleton().logDebug("·¢ËÍÊı¾İ³É¹¦");
+    LogManager::getSingleton().logDebug("å‘é€æ•°æ®æˆåŠŸ");
 
-    ///< É¾³ıÏûÏ¢
+    ///< åˆ é™¤æ¶ˆæ¯
     delete data;
     data = NULL;
 }
@@ -307,17 +310,17 @@ void ConnectSocket::sandData(ComDataType* data)
 void ConnectSocket::requestChatRequest( ComDataType* data )
 {
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÁÄÌìÇëÇóÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºèŠå¤©è¯·æ±‚å®ä½“æŒ‡é’ˆ
     ChatRequestDataType* charRequestData = dynamic_cast<ChatRequestDataType*>(data);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == charRequestData)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("»ñµÃ½»Ì¸ÇëÇó²¢×ª·¢¸øÖ÷Ïß³Ì´¦Àí");
+    LogManager::getSingleton().logDebug("è·å¾—äº¤è°ˆè¯·æ±‚å¹¶è½¬å‘ç»™ä¸»çº¿ç¨‹å¤„ç†");
     emit chatRequest(charRequestData->getAccount());
 
     delete data;
@@ -326,17 +329,17 @@ void ConnectSocket::requestChatRequest( ComDataType* data )
 
 void ConnectSocket::requestChatResult( ComDataType* data )
 {
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÁÄÌìÇëÇó½á¹ûÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºèŠå¤©è¯·æ±‚ç»“æœå®ä½“æŒ‡é’ˆ
     ChatRequestResultType* charRequest = dynamic_cast<ChatRequestResultType*>(data);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == charRequest)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("»ñµÃ½»Ì¸ÇëÇó½á¹û²¢×ª·¢¸øÖ÷Ïß³Ì´¦Àí");
+    LogManager::getSingleton().logDebug("è·å¾—äº¤è°ˆè¯·æ±‚ç»“æœå¹¶è½¬å‘ç»™ä¸»çº¿ç¨‹å¤„ç†");
     emit chatRequestResult(charRequest->getAccount(), charRequest->getResult());
 
     delete data;
@@ -350,43 +353,43 @@ void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
     {
     case MT_LANDING_DATA:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄĞÅÏ¢½»ÓÉµÇÂ½´¦Àíº¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„ä¿¡æ¯äº¤ç”±ç™»é™†å¤„ç†å‡½æ•°å¤„ç†");
             requestLandingData(data);
             break;
         }
     case MT_SENDMESSAGE_MESSAGE:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄÏûÏ¢½»ÓÉ½ÓÊÜÏûÏ¢º¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„æ¶ˆæ¯äº¤ç”±æ¥å—æ¶ˆæ¯å‡½æ•°å¤„ç†");
             requestSendMessage_Message(data);
             break;
         }
     case MT_SENDMESSAGE_DATA:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄÏûÏ¢½»ÓÉ½ÓÊÜÊı¾İº¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„æ¶ˆæ¯äº¤ç”±æ¥å—æ•°æ®å‡½æ•°å¤„ç†");
             requestSendMessage_Data(data);
             break;
         }
     case MT_REGISTER_DATA:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄÏûÏ¢½»ÓÉ×¢²á´¦Àíº¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„æ¶ˆæ¯äº¤ç”±æ³¨å†Œå¤„ç†å‡½æ•°å¤„ç†");
             requestRegister(data);
             break;
         }
     case MT_CHATREQUESTS_DATA:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄÏûÏ¢½»ÓÉÁÄÌìÇëÇó´¦Àíº¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„æ¶ˆæ¯äº¤ç”±èŠå¤©è¯·æ±‚å¤„ç†å‡½æ•°å¤„ç†");
             requestChatRequest(data);
             break;
         }
     case MT_CHATREQUESTS_RESULT:
         {
-            LogManager::getSingleton().logDebug("½«ÊÕµ½µÄÏûÏ¢½»ÓÉÁÄÌì½á¹ûÇëÇóº¯Êı´¦Àí");
+            LogManager::getSingleton().logDebug("å°†æ”¶åˆ°çš„æ¶ˆæ¯äº¤ç”±èŠå¤©ç»“æœè¯·æ±‚å‡½æ•°å¤„ç†");
             requestChatResult(data);
             break;
         }
     default:
         {
-            LogManager::getSingleton().logDebug("ÊÕµ½·Ç·¨ÏûÏ¢ÀàĞÍ");
+            LogManager::getSingleton().logDebug("æ”¶åˆ°éæ³•æ¶ˆæ¯ç±»å‹");
             assert(false);
         }
     }
@@ -394,8 +397,8 @@ void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
 
 void ConnectSocket::updataTheList( QString& account, bool state )
 {
-    LogManager::getSingleton().logDebug("·¢ËÍ¸üĞÂÓÃ»§Ãû:" 
-                + account.toStdString() + "µÄ×´Ì¬Îª" + (state ? "ÔÚÏß": "²»ÔÚÏß"));
+    LogManager::getSingleton().logDebug("å‘é€æ›´æ–°ç”¨æˆ·å:" 
+                + account.toStdString() + "çš„çŠ¶æ€ä¸º" + (state ? "åœ¨çº¿": "ä¸åœ¨çº¿"));
     sandUserList(account.toStdString(), "", "", state, true);
 }
 

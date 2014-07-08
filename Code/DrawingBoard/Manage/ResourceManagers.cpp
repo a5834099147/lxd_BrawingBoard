@@ -2,6 +2,9 @@
 #include "LogManager.h"
 #include "PathManager.h"
 
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
+
 ///< 资源类实体, 将使用范围现在在本文件内
 static ResourceManagers resourceManagers;
 

@@ -1,6 +1,8 @@
-#include "ChatDataTypeFactory.h"
+ï»¿#include "ChatDataTypeFactory.h"
 #include "LogManager.h"
 
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 ChatDataTypeFactory::ChatDataTypeFactory(void)
 {
@@ -19,25 +21,25 @@ ChatDataType* ChatDataTypeFactory::createChatMessageType( ChatMessageType msgTyp
     {
     case CM_MESSAGE :
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÁÄÌìÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªèŠå¤©æ¶ˆæ¯");
             chatDataType = new ChatMessageDataType();
             break;
         }
     case CM_EXIT :
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÍË³öÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªé€€å‡ºæ¶ˆæ¯");
             chatDataType = new ChatExitType();
             break;
         }
     case CM_FILENAME:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÎÄ¼þÃû½ÓÊÜÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªæ–‡ä»¶åæŽ¥å—æ¶ˆæ¯");
             assert(false);
             break;
         }
     default:
         {
-            LogManager::getSingleton().logError("´´½¨Ò»¸öÃ»ÓÐ¶¨ÒåµÄÁÄÌìÏûÏ¢");
+            LogManager::getSingleton().logError("åˆ›å»ºä¸€ä¸ªæ²¡æœ‰å®šä¹‰çš„èŠå¤©æ¶ˆæ¯");
             assert(false);
         }
     }

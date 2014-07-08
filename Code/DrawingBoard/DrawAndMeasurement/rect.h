@@ -1,4 +1,4 @@
-#ifndef RECT_H
+﻿#ifndef RECT_H
 #define RECT_H
 
 #include "shape.h"

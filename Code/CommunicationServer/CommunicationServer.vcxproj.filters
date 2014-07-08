@@ -87,6 +87,9 @@
     <ClCompile Include="Server\CustomEventType.cpp">
       <Filter>Server</Filter>
     </ClCompile>
+    <ClCompile Include="..\Share\Utility.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Share\ComDataType.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="Server\CustomEventType.h">
       <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\Utility.h">
+      <Filter>Share</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

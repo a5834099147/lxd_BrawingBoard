@@ -1,4 +1,7 @@
-#include "mychitoletter.h"
+﻿#include "mychitoletter.h"
+
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
 
 MyChiToLetter::MyChiToLetter()
 {
@@ -473,7 +476,7 @@ string MyChiToLetter::FindLetter( int nCode )
     case 7684:
     case 8043:
     case 8457:
-        strValue="4337 ��";
+        strValue="4337 伺";
         break;
     case 6042:
     case 6840:
@@ -1647,7 +1650,7 @@ string MyChiToLetter::FindLetter( int nCode )
     case 7918:
     case 7989:
     case 8158:
-        strValue="L��";
+        strValue="Lü";
         break;
     case 5968:
     case 6303:
@@ -1678,7 +1681,7 @@ string MyChiToLetter::FindLetter( int nCode )
     case 8639:
         strValue="LUAN";
         break;
-        strValue="L��E";
+        strValue="LǖE";
         break;
         strValue="LUN";
         break;
@@ -1983,7 +1986,7 @@ string MyChiToLetter::FindLetter( int nCode )
     case 7704:
     case 7847:
     case 8412:
-        strValue="N��";
+        strValue="Nǖ";
         break;
         strValue="NUAN";
         break;
@@ -2689,7 +2692,7 @@ string MyChiToLetter::FindLetter( int nCode )
     case 7666:
         strValue="TAO";
         break;
-        strValue="1845 ��";
+        strValue="1845 餐";
         break;
     case 6315:
     case 7693:

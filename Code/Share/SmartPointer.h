@@ -1,11 +1,11 @@
-#ifndef _SMARTPOINTER_H__
+ï»¿#ifndef _SMARTPOINTER_H__
 #define _SMARTPOINTER_H__
 
 #include "boost/shared_array.hpp"
 #include "boost/shared_array.hpp"
 #include "boost/make_shared.hpp"
 
-///< ¶¨ÒåÖÇÄÜÖ¸Õë
+///< å®šä¹‰æ™ºèƒ½æŒ‡é’ˆ
 template <typename T>
 struct SharePtr
 {
@@ -18,10 +18,10 @@ struct ShareArrayPtr
     typedef boost::shared_array<T> type;
 };
 
-///< ÖÇÄÜÖ¸ÕëµÄ´´½¨
+///< æ™ºèƒ½æŒ‡é’ˆçš„åˆ›å»º
 #define MakeShared boost::make_shared
 
-///< ¶¨ÒåÖÇÄÜÖ¸ÕëµÄ×ª»»
+///< å®šä¹‰æ™ºèƒ½æŒ‡é’ˆçš„è½¬æ¢
 #define StaticPointerCast boost::static_pointer_cast
 
 #define DynamicPointerCast boost::dynamic_pointer_cast

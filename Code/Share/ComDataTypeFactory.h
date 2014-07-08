@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ComDataType.h"
 #include "common.h"

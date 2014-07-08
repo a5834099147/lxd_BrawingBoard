@@ -1,11 +1,11 @@
-//********************************************************************
-//    COMDATATYPE.H    ÎÄ¼þ×¢ÊÍ
-//    ÎÄ¼þÃû  : COMDATATYPE.H
-//    ×÷Õß    : ÀîÏþ¶«
+ï»¿//********************************************************************
+//    COMDATATYPE.H    æ–‡ä»¶æ³¨é‡Š
+//    æ–‡ä»¶å  : COMDATATYPE.H
+//    ä½œè€…    : æŽæ™“ä¸œ
 //    TEL     : 18628980285
-//    ÓÊÏä    : a5834099147@126.com
-//    ´´½¨Ê±¼ä: 2014/5/13 20:39
-//    ÎÄ¼þÃèÊö: 
+//    é‚®ç®±    : a5834099147@126.com
+//    åˆ›å»ºæ—¶é—´: 2014/5/13 20:39
+//    æ–‡ä»¶æè¿°: 
 //*********************************************************************
 #ifndef __COMDATATYPE_H__
 #define __COMDATATYPE_H__
@@ -14,7 +14,7 @@
 
 #include "common.h"
 
-///< »ùÀà
+///< åŸºç±»
 class ComDataType
 {
 public:
@@ -30,7 +30,7 @@ protected:
     MsgType m_msgType;
 };
 
-///< µÇÂ½ÇëÇóÊý¾Ý
+///< ç™»é™†è¯·æ±‚æ•°æ®
 class LandingDataType : public ComDataType
 {
 public:
@@ -68,7 +68,7 @@ private:
     QString m_password;
 };
 
-///< µÇÂ½ÇëÇó½á¹û
+///< ç™»é™†è¯·æ±‚ç»“æžœ
 class LandingResultType : public ComDataType
 {
 public:
@@ -104,7 +104,7 @@ private:
     bool m_result;
 };
 
-///< ×¢²áÇëÇóÊý¾Ý
+///< æ³¨å†Œè¯·æ±‚æ•°æ®
 class RegisterDataType : public ComDataType
 {
 public:
@@ -164,7 +164,7 @@ private:
     QString m_spelling;
 };
 
-///< ×¢²áÇëÇó½á¹û
+///< æ³¨å†Œè¯·æ±‚ç»“æžœ
 class RegisterResultType : public ComDataType
 {
 public:
@@ -191,7 +191,7 @@ private:
     bool m_result;
 };
 
-///< ÁÐ±í·µ»Ø
+///< åˆ—è¡¨è¿”å›ž
 class ReturnTheListDataType : public ComDataType
 {
 public:
@@ -260,13 +260,13 @@ private:
     QString m_userName;
     QString m_spelling;
 
-    ///< ÊÇ·ñÔÚÏß
+    ///< æ˜¯å¦åœ¨çº¿
     bool m_onLine;
-    ///< ÊÇ·ñÎª¸üÐÂ
+    ///< æ˜¯å¦ä¸ºæ›´æ–°
     bool m_isUpdate;
 };
 
-///< ·¢ËÍÏûÏ¢
+///< å‘é€æ¶ˆæ¯
 class SandMessageType : public ComDataType
 {
 public:
@@ -315,7 +315,7 @@ private:
     QString m_message;
 };
 
-///< ÁÄÌìÇëÇó
+///< èŠå¤©è¯·æ±‚
 class ChatRequestDataType : public ComDataType
 {
 public:
@@ -341,7 +341,7 @@ private:
     QString m_account;
 };
 
-///< ÁÄÌìÇëÇó½á¹û
+///< èŠå¤©è¯·æ±‚ç»“æžœ
 class ChatRequestResultType : public ComDataType
 {
 public:

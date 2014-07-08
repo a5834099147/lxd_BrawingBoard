@@ -1,4 +1,4 @@
-#include "login.h"
+ï»¿#include "login.h"
 #include "register.h"
 
 #include <QLineEdit>
@@ -8,6 +8,9 @@
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QMessageBox>
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 Login::Login(/*QWidget *parent*/)
     : QDialog(/*parent*/)
@@ -21,15 +24,15 @@ Login::~Login()
 
 void Login::Initialize()
 {
-    accountL_ = new QLabel(tr("ÓÃ»§Ãû:"));
-    passwordL_ = new QLabel(tr("ÃÜÂë"));
+    accountL_ = new QLabel(tr("ç”¨æˆ·å:"));
+    passwordL_ = new QLabel(tr("å¯†ç "));
 
     accountE_ = new QLineEdit;
     passwordE_ = new QLineEdit;
 
-    loginB_ = new QPushButton(tr("µÇÂ¼"));
-    registerB_ = new QPushButton(tr("×¢²á"));
-    cancelB_ = new QPushButton(tr("ÍË³ö"));
+    loginB_ = new QPushButton(tr("ç™»å½•"));
+    registerB_ = new QPushButton(tr("æ³¨å†Œ"));
+    cancelB_ = new QPushButton(tr("é€€å‡º"));
 
     QFormLayout* upLayout = new QFormLayout;
     upLayout->addRow(accountL_, accountE_);
@@ -49,7 +52,7 @@ void Login::Initialize()
 
     setLayout(layout_);
     this->setFixedHeight(this->sizeHint().height());
-    this->setWindowTitle(tr("µÇÂ¼"));
+    this->setWindowTitle(tr("ç™»å½•"));
 
     createSlots();
 }
@@ -84,7 +87,7 @@ void Login::on_login_recive(bool result)
     }
     else 
     {
-        if (QMessageBox::critical(NULL, "µÇÂ½´íÎó", "ÄúÊäÈëµÄÕËºÅ¹ıÃÜÂëÎŞ·¨Í¨¹ıÑéÖ¤£¬ÇëÖØĞÂÊäÈë",
+        if (QMessageBox::critical(NULL, "ç™»é™†é”™è¯¯", "æ‚¨è¾“å…¥çš„è´¦å·è¿‡å¯†ç æ— æ³•é€šè¿‡éªŒè¯ï¼Œè¯·é‡æ–°è¾“å…¥",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No)
         {
             reject();
@@ -98,7 +101,7 @@ void Login::on_loginB_clicked()
     std::string password = passwordE_->text().toStdString();
     if (account.empty() || password.empty())
     {
-        if (QMessageBox::critical(NULL, "µÇÂ¼", "µÇÂ¼ĞÅÏ¢ÌîĞ´²»ÍêÕû, ÇëÖØÊÔ",
+        if (QMessageBox::critical(NULL, "ç™»å½•", "ç™»å½•ä¿¡æ¯å¡«å†™ä¸å®Œæ•´, è¯·é‡è¯•",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No)
         {
             reject();

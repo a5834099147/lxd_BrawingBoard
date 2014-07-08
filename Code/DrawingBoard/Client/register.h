@@ -1,4 +1,4 @@
-#ifndef REGISTER_H
+﻿#ifndef REGISTER_H
 #define REGISTER_H
 
 #include <QDialog>

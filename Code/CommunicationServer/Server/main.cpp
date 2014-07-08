@@ -1,14 +1,19 @@
-#include <QtCore/QCoreApplication>
+ï»¿#include <QtCore/QCoreApplication>
 #include <QtCore/QTextCodec>
+#include <windows.h>
+#include <stdlib.h>
 
 #include "LogManager.h"
 #include "ResourceManagers.h"
 #include "serversocket.h"
 #include "odb_user.h"
 
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
+
 int main(int argc, char* argv[])
 {
-    ///< ¸÷Àà×ÊÔ´µÄ³õÊ¼»¯
+	///< å„ç±»èµ„æºçš„åˆå§‹åŒ–
     if (!ResourceManagers::getSingleton().initiateResources())
     {
         return 0;
@@ -16,16 +21,12 @@ int main(int argc, char* argv[])
 
     QCoreApplication a(argc, argv);
 
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
-
     odb_user odb;
 
     ServerSocket server(7733);
     if (!server.start())
     {
-        LogManager::getSingleton().logAlert("µ±·þÎñÆ÷µ÷ÓÃ¼àÌýÊ±³ö´í");
+        LogManager::getSingleton().logAlert("å½“æœåŠ¡å™¨è°ƒç”¨ç›‘å¬æ—¶å‡ºé”™");
         return 0;
     }
 

@@ -1,11 +1,17 @@
-#include "chat.h"
+ï»¿#include "chat.h"
 #include "ui_chat.h"
 #include "common.h"
 #include "ChatDataType.h"
 #include "LogManager.h"
 
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QFileDialog>
+#include <QColorDialog>
 #include <cassert>
 
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 Chat::Chat(QString targAccont, QString targIp, qint32 localPort, qint32 targPort)
     : ui(new Ui::chat),
@@ -23,10 +29,10 @@ Chat::Chat(QString targAccont, QString targIp, qint32 localPort, qint32 targPort
     ui->textEdit->setFocus();
     ui->textEdit->installEventFilter(this);
 
-    ui->label->setText(tr("Óë%1ÁÄÌìÖĞ   ¶Ô·½IP:%2").arg(m_targAccount).arg(m_targIp));
-    setWindowTitle(QString("Óë %1 ÁÄÌìÖĞ...").arg(m_targAccount));
+    ui->label->setText(tr("ä¸%1èŠå¤©ä¸­   å¯¹æ–¹IP:%2").arg(m_targAccount).arg(m_targIp));
+    setWindowTitle(QString("ä¸ %1 èŠå¤©ä¸­...").arg(m_targAccount));
 
-    //UDP²¿·Ö
+    //UDPéƒ¨åˆ†
     m_chatSocket = new QUdpSocket(this);
     m_localPort = localPort;
     m_chatSocket->bind(m_localPort );
@@ -44,10 +50,10 @@ bool Chat::eventFilter(QObject *target, QEvent *event)
 {
     if(target == ui->textEdit)
     {
-        if(event->type() == QEvent::KeyPress)//°´ÏÂ¼üÅÌÄ³¼ü
+        if(event->type() == QEvent::KeyPress)//æŒ‰ä¸‹é”®ç›˜æŸé”®
         {
             QKeyEvent *k = static_cast<QKeyEvent *>(event);
-            if(k->key() == Qt::Key_Return)//»Ø³µ¼ü
+            if(k->key() == Qt::Key_Return)//å›è½¦é”®
             {
                 on_send_clicked();
                 return true;
@@ -57,19 +63,19 @@ bool Chat::eventFilter(QObject *target, QEvent *event)
     return QWidget::eventFilter(target,event);
 }
 
-QString Chat::getIP()  //»ñÈ¡ipµØÖ·
+QString Chat::getIP()  //è·å–ipåœ°å€
 {
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
     foreach (QHostAddress address, list)
     {
-        ///< Ê¹ÓÃ IPv4µØÖ·
+        ///< ä½¿ç”¨ IPv4åœ°å€
         if(address.protocol() == QAbstractSocket::IPv4Protocol)
             return address.toString();
     }
     return 0;
 }
 
-void Chat::processPendingDatagrams()   //½ÓÊÕÊı¾İUDP
+void Chat::processPendingDatagrams()   //æ¥æ”¶æ•°æ®UDP
 {
     while(m_chatSocket->hasPendingDatagrams())
     {
@@ -88,25 +94,25 @@ void Chat::processPendingDatagrams()   //½ÓÊÕÊı¾İUDP
         {
         case CM_MESSAGE:
             {
-                LogManager::getSingleton().logDebug("ÁÄÌì¶Ô»°¿òÊÕµ½´øÓĞÁÄÌìÄÚÈİµÄÏûÏ¢, ½»ÓÉÁÄÌìÄÚÈİ´¦Àíº¯Êı´¦Àí");
+                LogManager::getSingleton().logDebug("èŠå¤©å¯¹è¯æ¡†æ”¶åˆ°å¸¦æœ‰èŠå¤©å†…å®¹çš„æ¶ˆæ¯, äº¤ç”±èŠå¤©å†…å®¹å¤„ç†å‡½æ•°å¤„ç†");
                 requestMessage(chatDataType);
                 break;
             }
         case CM_EXIT:
             {
-                LogManager::getSingleton().logDebug("ÁÄÌì¶Ô»°¿òÊÕµ½½áÊø¶Ô»°ÏûÏ¢, ½»ÓÉ½áÊøÍ¨»°º¯Êı´¦Àí");
+                LogManager::getSingleton().logDebug("èŠå¤©å¯¹è¯æ¡†æ”¶åˆ°ç»“æŸå¯¹è¯æ¶ˆæ¯, äº¤ç”±ç»“æŸé€šè¯å‡½æ•°å¤„ç†");
                 requestExit();
                 break;
             }
         case  CM_FILENAME:
             {
-                LogManager::getSingleton().logDebug("ÁÄÌì¶Ô»°¿òÊÕµ½ÎÄ¼şÇëÇóÏûÏ¢, ½»ÓÉÎÄ¼şÇëÇóº¯Êı´¦Àí");
+                LogManager::getSingleton().logDebug("èŠå¤©å¯¹è¯æ¡†æ”¶åˆ°æ–‡ä»¶è¯·æ±‚æ¶ˆæ¯, äº¤ç”±æ–‡ä»¶è¯·æ±‚å‡½æ•°å¤„ç†");
                 requestFileName(chatDataType);
                 break;
             }
         default:
             {
-                LogManager::getSingleton().logDebug("ÁÄÌì¶Ô»°¿òÊÕµ½·Ç·¨ÏûÏ¢, ÎŞ·¨½âÎö");
+                LogManager::getSingleton().logDebug("èŠå¤©å¯¹è¯æ¡†æ”¶åˆ°éæ³•æ¶ˆæ¯, æ— æ³•è§£æ");
                 assert(false);
                 break;
             }
@@ -114,7 +120,7 @@ void Chat::processPendingDatagrams()   //½ÓÊÕÊı¾İUDP
     }
 }
 
-QString Chat::getMessage()  //»ñµÃÒª·¢ËÍµÄĞÅÏ¢
+QString Chat::getMessage()  //è·å¾—è¦å‘é€çš„ä¿¡æ¯
 {
     QString msg = ui->textEdit->toHtml();
     ui->textEdit->clear();
@@ -122,30 +128,30 @@ QString Chat::getMessage()  //»ñµÃÒª·¢ËÍµÄĞÅÏ¢
     return msg;
 }
 
-void Chat::sendMessage()  //·¢ËÍĞÅÏ¢
+void Chat::sendMessage()  //å‘é€ä¿¡æ¯
 {
     if(ui->textEdit->toPlainText() == "")
     {
-        QMessageBox::warning(0,tr("¾¯¸æ"),tr("·¢ËÍÄÚÈİ²»ÄÜÎª¿Õ"),QMessageBox::Ok);
+        QMessageBox::warning(0,tr("è­¦å‘Š"),tr("å‘é€å†…å®¹ä¸èƒ½ä¸ºç©º"),QMessageBox::Ok);
         return;
     }
 
     if (!m_canSend)
     {
-        QMessageBox::warning(NULL, tr("¾¯¸æ"), tr("¶Ô·½ÒÑ¾­ÀëÏß, ·¢ËÍÏûÏ¢Ê§°Ü"), QMessageBox::Ok);
+        QMessageBox::warning(NULL, tr("è­¦å‘Š"), tr("å¯¹æ–¹å·²ç»ç¦»çº¿, å‘é€æ¶ˆæ¯å¤±è´¥"), QMessageBox::Ok);
         return;
     }
 
-    ///< ´´½¨ÏûÏ¢ÊµÌå
+    ///< åˆ›å»ºæ¶ˆæ¯å®ä½“
     ChatDataType* cDType = m_cDTypeFactory.createChatMessageType(CM_MESSAGE);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÏûÏ¢ÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºæ¶ˆæ¯å®ä½“æŒ‡é’ˆ
     ChatMessageDataType* cMDType = dynamic_cast<ChatMessageDataType*>(cDType);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == cMDType)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -158,12 +164,12 @@ void Chat::sendMessage()  //·¢ËÍĞÅÏ¢
 }
 
 void Chat::currentFormatChanged(const QTextCharFormat &format)
-{//µ±±à¼­Æ÷µÄ×ÖÌå¸ñÊ½¸Ä±äÊ±£¬ÎÒÃÇÈÃ²¿¼ş×´Ì¬Ò²ËæÖ®¸Ä±ä
+{//å½“ç¼–è¾‘å™¨çš„å­—ä½“æ ¼å¼æ”¹å˜æ—¶ï¼Œæˆ‘ä»¬è®©éƒ¨ä»¶çŠ¶æ€ä¹Ÿéšä¹‹æ”¹å˜
     ui->fontComboBox->setCurrentFont(format.font());
 
-    if(format.fontPointSize()<9)  //Èç¹û×ÖÌå´óĞ¡³ö´í£¬ÒòÎªÎÒÃÇ×îĞ¡µÄ×ÖÌåÎª9
+    if(format.fontPointSize()<9)  //å¦‚æœå­—ä½“å¤§å°å‡ºé”™ï¼Œå› ä¸ºæˆ‘ä»¬æœ€å°çš„å­—ä½“ä¸º9
     {
-        ui->fontsizecomboBox->setCurrentIndex(3); //¼´ÏÔÊ¾12
+        ui->fontsizecomboBox->setCurrentIndex(3); //å³æ˜¾ç¤º12
     }
     else
     {
@@ -176,7 +182,7 @@ void Chat::currentFormatChanged(const QTextCharFormat &format)
     m_color = format.foreground().color();
 }
 
-void Chat::on_fontComboBox_currentFontChanged(QFont f)//×ÖÌåÉèÖÃ
+void Chat::on_fontComboBox_currentFontChanged(QFont f)//å­—ä½“è®¾ç½®
 {
     ui->textEdit->setCurrentFont(f);
     ui->textEdit->setFocus();
@@ -203,32 +209,32 @@ void Chat::on_textitalic_clicked(bool checked)
     ui->textEdit->setFocus();
 }
 
-void Chat::on_save_clicked()//±£´æÁÄÌì¼ÇÂ¼
+void Chat::on_save_clicked()//ä¿å­˜èŠå¤©è®°å½•
 {
     if(ui->textBrowser->document()->isEmpty())
-        QMessageBox::warning(0,tr("¾¯¸æ"),tr("ÁÄÌì¼ÇÂ¼Îª¿Õ£¬ÎŞ·¨±£´æ£¡"),QMessageBox::Ok);
+        QMessageBox::warning(0,tr("è­¦å‘Š"),tr("èŠå¤©è®°å½•ä¸ºç©ºï¼Œæ— æ³•ä¿å­˜ï¼"),QMessageBox::Ok);
     else
     {
-        //»ñµÃÎÄ¼şÃû
-        QString fileName = QFileDialog::getSaveFileName(this,tr("±£´æÁÄÌì¼ÇÂ¼"),tr("ÁÄÌì¼ÇÂ¼"),tr("ÎÄ±¾(*.txt);;All File(*.*)"));
+        //è·å¾—æ–‡ä»¶å
+        QString fileName = QFileDialog::getSaveFileName(this,tr("ä¿å­˜èŠå¤©è®°å½•"),tr("èŠå¤©è®°å½•"),tr("æ–‡æœ¬(*.txt);;All File(*.*)"));
         if(!fileName.isEmpty())
             saveFile(fileName);
     }
 }
 
-void Chat::on_clear_clicked()//Çå¿ÕÁÄÌì¼ÇÂ¼
+void Chat::on_clear_clicked()//æ¸…ç©ºèŠå¤©è®°å½•
 {
     ui->textBrowser->clear();
 }
 
-bool Chat::saveFile(const QString &fileName)//±£´æÎÄ¼ş
+bool Chat::saveFile(const QString &fileName)//ä¿å­˜æ–‡ä»¶
 {
     QFile file(fileName);
     if(!file.open(QFile::WriteOnly | QFile::Text))
 
     {
-        QMessageBox::warning(this,tr("±£´æÎÄ¼ş"),
-            tr("ÎŞ·¨±£´æÎÄ¼ş %1:\n %2").arg(fileName)
+        QMessageBox::warning(this,tr("ä¿å­˜æ–‡ä»¶"),
+            tr("æ— æ³•ä¿å­˜æ–‡ä»¶ %1:\n %2").arg(fileName)
             .arg(file.errorString()));
         return false;
     }
@@ -264,13 +270,13 @@ void Chat::on_send_clicked()
     if (!m_canSend)
     {
         ui->textBrowser->setTextColor(Qt::red);
-        ui->textBrowser->append("[ " + QString("ÏµÍ³") +" ] "+ time);
-        ui->textBrowser->append("¶Ô·½ÀëÏß, ÏûÏ¢·¢ËÍÊ§°Ü...");
+        ui->textBrowser->append("[ " + QString("ç³»ç»Ÿ") +" ] "+ time);
+        ui->textBrowser->append("å¯¹æ–¹ç¦»çº¿, æ¶ˆæ¯å‘é€å¤±è´¥...");
     }
     else 
     {
         ui->textBrowser->setTextColor(Qt::blue);
-        ui->textBrowser->append("[ " + QString("±¾ÈË") +" ] "+ time);
+        ui->textBrowser->append("[ " + QString("æœ¬äºº") +" ] "+ time);
         ui->textBrowser->append(m_message);
     }
 }
@@ -288,19 +294,19 @@ void Chat::closeEvent( QCloseEvent * )
     }
 
     emit exitTheChat();
-    LogManager::getSingleton().logDebug("·¢ËÍ¹Ø±ÕÏûÏ¢, ÁÄÌì½çÃæ¼´½«¹Ø±Õ");
+    LogManager::getSingleton().logDebug("å‘é€å…³é—­æ¶ˆæ¯, èŠå¤©ç•Œé¢å³å°†å…³é—­");
 }
 
 void Chat::requestMessage( ChatDataType* cDType )
 {
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÁÄÌìĞÅÏ¢ÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºèŠå¤©ä¿¡æ¯å®ä½“æŒ‡é’ˆ
     ChatMessageDataType* chatMDType = dynamic_cast<ChatMessageDataType*>(cDType);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == chatMDType)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 
@@ -325,7 +331,7 @@ void Chat::requestExit()
     ui->textBrowser->setTextColor(Qt::red);
     ui->textBrowser->setCurrentFont(QFont("Times New Roman",12));
     ui->textBrowser->append("[ " + m_targAccount +" ] "+ time);
-    ui->textBrowser->append("¶Ô·½ÒÑ¾­ÀëÏß!");
+    ui->textBrowser->append("å¯¹æ–¹å·²ç»ç¦»çº¿!");
     m_canSend = false;
 }
 
@@ -344,16 +350,16 @@ void Chat::sendUDPMessage( ChatDataType* cDType )
 
 void Chat::sendExit()
 {
-    ///< ´´½¨ÍË³öÊµÌå
+    ///< åˆ›å»ºé€€å‡ºå®ä½“
     ChatDataType* cDType = m_cDTypeFactory.createChatMessageType(CM_EXIT);
 
-    ///< ½«»ùÀàÖ¸Õë×ª»»ÎªÏûÏ¢ÊµÌåÖ¸Õë
+    ///< å°†åŸºç±»æŒ‡é’ˆè½¬æ¢ä¸ºæ¶ˆæ¯å®ä½“æŒ‡é’ˆ
     ChatExitType* cEType = dynamic_cast<ChatExitType*>(cDType);
 
-    ///< ÅĞ¶ÏÊÇ·ñ·¢Éú×ª»»Òì³£
+    ///< åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè½¬æ¢å¼‚å¸¸
     if (NULL == cEType)
     {
-        LogManager::getSingleton().logAlert("ÀàĞÍ×ª»»Ê±³öÏÖ´íÎó, ²úÉú¿ÕÖ¸ÕëÒì³£");
+        LogManager::getSingleton().logAlert("ç±»å‹è½¬æ¢æ—¶å‡ºç°é”™è¯¯, äº§ç”Ÿç©ºæŒ‡é’ˆå¼‚å¸¸");
         assert(false);
     }
 

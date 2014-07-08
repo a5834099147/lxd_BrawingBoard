@@ -83,9 +83,6 @@
     <ClCompile Include="DrawAndMeasurement\round.cpp">
       <Filter>DrawAndMeasurement</Filter>
     </ClCompile>
-    <ClCompile Include="DrawAndMeasurement\roundrect.cpp">
-      <Filter>DrawAndMeasurement</Filter>
-    </ClCompile>
     <ClCompile Include="DrawAndMeasurement\shape.cpp">
       <Filter>DrawAndMeasurement</Filter>
     </ClCompile>
@@ -164,6 +161,12 @@
     <ClCompile Include="Chat\ChatDataTypeFactory.cpp">
       <Filter>Chat</Filter>
     </ClCompile>
+    <ClCompile Include="DrawAndMeasurement\FilletRect.cpp">
+      <Filter>DrawAndMeasurement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Share\Utility.cpp">
+      <Filter>Share</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Client\clientsocket.h">
@@ -213,9 +216,6 @@
     <ClInclude Include="DrawAndMeasurement\round.h">
       <Filter>DrawAndMeasurement</Filter>
     </ClInclude>
-    <ClInclude Include="DrawAndMeasurement\roundrect.h">
-      <Filter>DrawAndMeasurement</Filter>
-    </ClInclude>
     <ClInclude Include="..\Share\ComDataType.h">
       <Filter>Share</Filter>
     </ClInclude>
@@ -254,6 +254,12 @@
     </ClInclude>
     <ClInclude Include="Chat\ChatDataTypeFactory.h">
       <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawAndMeasurement\FilletRect.h">
+      <Filter>DrawAndMeasurement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Share\Utility.h">
+      <Filter>Share</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

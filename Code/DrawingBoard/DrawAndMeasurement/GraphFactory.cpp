@@ -1,5 +1,5 @@
-//////////////////////////////////////////////////////////////////////////
-///< ¸ÃÀàÎª´´½¨Í¼ÐÎµÄ¹¤³§Àà
+ï»¿//////////////////////////////////////////////////////////////////////////
+///< è¯¥ç±»ä¸ºåˆ›å»ºå›¾å½¢çš„å·¥åŽ‚ç±»
 //////////////////////////////////////////////////////////////////////////
 #include "GraphFactory.h"
 
@@ -7,10 +7,13 @@
 #include "points.h"
 #include "rect.h"
 #include "round.h"
-#include "roundrect.h"
+#include "FilletRect.h"
 #include "shape.h"
 
 #include "LogManager.h"
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 GraphFactory::GraphFactory(void)
 {
@@ -29,37 +32,37 @@ Shape* GraphFactory::CreateGraph( Shape::Code type )
     {
     case Shape::Line:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ö±ÏßÊµÌå");
+            LogManager::getSingleton().logDebug("åˆ›å»ºç›´çº¿å®žä½“");
             shape = new Line();
             break;
         }
     case Shape::Rect:
         {
-            LogManager::getSingleton().logDebug("´´½¨ÍÖÔ²ÊµÌå");
+            LogManager::getSingleton().logDebug("åˆ›å»ºæ¤­åœ†å®žä½“");
             shape = new Rect();
             break;
         }
     case Shape::Round:
         {
-            LogManager::getSingleton().logDebug("´´½¨¾ØÐÎÊµÌå");
+            LogManager::getSingleton().logDebug("åˆ›å»ºçŸ©å½¢å®žä½“");
             shape = new Round();
             break;
         }
     case Shape::RoundRect:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ô²½Ç¾ØÐÎÊµÌå");
-            shape = new RoundRect();
+            LogManager::getSingleton().logDebug("åˆ›å»ºåœ†è§’çŸ©å½¢å®žä½“");
+            shape = new FilletRect();
             break;
         }
     case Shape::Points:
         {
-            LogManager::getSingleton().logDebug("´´½¨×ÔÓÉÖ±ÏßÊµÌå");
+            LogManager::getSingleton().logDebug("åˆ›å»ºè‡ªç”±ç›´çº¿å®žä½“");
             shape = new Points;
             break;
         }
     default:
         {
-            LogManager::getSingleton().logError("³öÏÖ·Ç·¨´´½¨");
+            LogManager::getSingleton().logError("å‡ºçŽ°éžæ³•åˆ›å»º");
             assert(false);
         }
     }

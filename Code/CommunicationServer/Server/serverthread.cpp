@@ -1,4 +1,4 @@
-#include "serverthread.h"
+ï»¿#include "serverthread.h"
 #include "connectsocket.h"
 #include "CustomEventType.h"
 #include "common.h"
@@ -6,6 +6,9 @@
 
 #include <boost/lexical_cast.hpp>
 #include <QEvent>
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 ServerThread::ServerThread(quint32 thrdfd, int sockfd, QObject *parent)
     : QThread(parent),
@@ -32,16 +35,16 @@ ServerThread::~ServerThread()
 
 void ServerThread::run()
 {
-    LogManager::getSingleton().logDebug("Ïß³Ì: " + 
-                boost::lexical_cast<std::string>(m_thrd_fd) + "¿ªÊ¼ÔËĞĞ");
+    LogManager::getSingleton().logDebug("çº¿ç¨‹: " + 
+                boost::lexical_cast<std::string>(m_thrd_fd) + "å¼€å§‹è¿è¡Œ");
     exec();
 }
 
 void ServerThread::sockDisconnected()
 {
-    LogManager::getSingleton().logDebug("Ïß³Ì: " + 
+    LogManager::getSingleton().logDebug("çº¿ç¨‹: " + 
                 boost::lexical_cast<std::string>(m_thrd_fd) + 
-                "Í£Ö¹ÔËĞĞ, ËüµÄÌ×½Ó×ÖºÅÂëÎª: " + 
+                "åœæ­¢è¿è¡Œ, å®ƒçš„å¥—æ¥å­—å·ç ä¸º: " + 
                 boost::lexical_cast<std::string>(m_sock_fd));
     emit exiting(m_thrd_fd);
     exit();
@@ -51,29 +54,29 @@ void ServerThread::customEvent( QEvent *event )
 {
     if (event->type() == (QEvent::User + ET_CHANGETHELIST))
     {
-        LogManager::getSingleton().logDebug("Ïß³Ì: " + 
-                  boost::lexical_cast<std::string>(m_thrd_fd) + "ÊÕµ½ÁĞ±í¸ü¸ÄÇëÇó");
+        LogManager::getSingleton().logDebug("çº¿ç¨‹: " + 
+                  boost::lexical_cast<std::string>(m_thrd_fd) + "æ”¶åˆ°åˆ—è¡¨æ›´æ”¹è¯·æ±‚");
         ChangeTheList* tarEvent = static_cast<ChangeTheList*>(event);
         m_sock->updataTheList(tarEvent->getUserName(), tarEvent->getOnLine());
     }
     else if (event->type() == (QEvent::User + ET_CHATREQUEST))
     {
-        LogManager::getSingleton().logDebug("Ïß³Ì: " + 
-                  boost::lexical_cast<std::string>(m_thrd_fd) + "ÊÕµ½ÁÄÌìÇëÇó");
+        LogManager::getSingleton().logDebug("çº¿ç¨‹: " + 
+                  boost::lexical_cast<std::string>(m_thrd_fd) + "æ”¶åˆ°èŠå¤©è¯·æ±‚");
         ChatRequest* tarEvent = static_cast<ChatRequest*>(event);
         m_sock->sendChatRequest(tarEvent->getUserName());
     }
     else if (event->type() == (QEvent::User + ET_CHATREQUESTRESULT))
     {
-        LogManager::getSingleton().logDebug("Ïß³Ì: " +
-                  boost::lexical_cast<std::string>(m_sock_fd) + "ÊÕµ½ÁÄÌìÇëÇó½á¹û");
+        LogManager::getSingleton().logDebug("çº¿ç¨‹: " +
+                  boost::lexical_cast<std::string>(m_sock_fd) + "æ”¶åˆ°èŠå¤©è¯·æ±‚ç»“æœ");
         ChatRequestResult* tarEvent = static_cast<ChatRequestResult*>(event);
         m_sock->sendRequestChatRequest(tarEvent->getUserName(), tarEvent->getResult());
     }
     else if (event->type() == (QEvent::User + ET_OPENCHATPORT))
     {
-        LogManager::getSingleton().logDebug("Ïß³Ì: " +
-                 boost::lexical_cast<std::string>(m_sock_fd) + "ÊÕµ½ÁÄÌì¶Ë¿Ú´ò¿ªÃüÁî");
+        LogManager::getSingleton().logDebug("çº¿ç¨‹: " +
+                 boost::lexical_cast<std::string>(m_sock_fd) + "æ”¶åˆ°èŠå¤©ç«¯å£æ‰“å¼€å‘½ä»¤");
         OpenChatPort* tarEvent = static_cast<OpenChatPort*>(event);
         m_sock->sendOpenChatPort(tarEvent->getUserName(), tarEvent->getAddress(), 
                 tarEvent->getLocalPort(), tarEvent->getTargetPort());

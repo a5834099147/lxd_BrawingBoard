@@ -1,4 +1,4 @@
-#ifndef __PATHMANAGER_H__
+ï»¿#ifndef __PATHMANAGER_H__
 #define __PATHMANAGER_H__
 
 #include <string>
@@ -13,26 +13,23 @@ public:
 
     ~PathManager(void);
 
-    ///< »ñÈ¡µ¥¼þÀàµÄÊµÀý¶ÔÏó
+    ///< èŽ·å–å•ä»¶ç±»çš„å®žä¾‹å¯¹è±¡
     static PathManager& getSingleton(void);
 
-    ///< »ñµÃµ¥¼þÀàµÄÊµÀýÖ¸Õë
+    ///< èŽ·å¾—å•ä»¶ç±»çš„å®žä¾‹æŒ‡é’ˆ
     static PathManager* getSingletonPtr(void);
 
 public:
-    ///< »ñµÃ»æÍ¼¹¤×÷ÇøÈÕÖ¾ÅäÖÃÎÄ¼þÂ·¾¶
+    ///< èŽ·å¾—ç»˜å›¾å·¥ä½œåŒºæ—¥å¿—é…ç½®æ–‡ä»¶è·¯å¾„
     std::string getPlottingLogConfigFile();
 
-    ///< »ñÈ¡·þÎñÆ÷¹¤×÷ÇøÈÕÖ¾ÅäÖÃÎÄ¼þÂ·¾¶
+    ///< èŽ·å–æœåŠ¡å™¨å·¥ä½œåŒºæ—¥å¿—é…ç½®æ–‡ä»¶è·¯å¾„
     std::string getCommunicationLogComfigFile();
 
 private:
-    ///< »ñÈ¡ÅäÖÃÎÄ¼þÂ·¾¶
+    ///< èŽ·å–é…ç½®æ–‡ä»¶è·¯å¾„
     std::string getConfigurePath();
 
-private:
-    ///< »ñµÃµ±Ç°³ÌÐòÔËÐÐÄ¿Â¼
-    std::string getExecuteDir();
 };
 
 #endif  ///< __PATHMANAGER_H__

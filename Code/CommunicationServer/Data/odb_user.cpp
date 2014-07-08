@@ -1,4 +1,7 @@
-#include "odb_user.h"
+ï»¿#include "odb_user.h"
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 odb::database* odb_user::db = NULL;
 
@@ -19,7 +22,7 @@ void odb_user::initialization()
         db = new odb::sqlite::database(
             "test.db", SQLITE_OPEN_READWRITE);
     }
-    ///< È·±£Êý¾Ý¿â¼ÓÔØ³É¹¦.
+    ///< ç¡®ä¿æ•°æ®åº“åŠ è½½æˆåŠŸ.
     assert(db);
 }
 
@@ -40,7 +43,7 @@ bool odb_user::registerTheUser(const std::string& account, const std::string& pa
 {
     if (registerCheck(account))
     {
-        ///< ²éÑ¯µ½ÓÐ¸ÃÓÃ»§ÃûµÄÓÃ»§´æÔÚ, ×¢²áÊ§°Ü
+        ///< æŸ¥è¯¢åˆ°æœ‰è¯¥ç”¨æˆ·åçš„ç”¨æˆ·å­˜åœ¨, æ³¨å†Œå¤±è´¥
         return false;
     }
 
@@ -63,7 +66,7 @@ const std::vector<User> odb_user::detrainment()
 
     for (result::iterator i(r.begin()); i != r.end(); ++i)
     {
-        User user(i->Account(), "±£ÃÜ", i->UserName(), i->UserNamePinyin());
+        User user(i->Account(), "ä¿å¯†", i->UserName(), i->UserNamePinyin());
         user_v.push_back(user);
     }
     return user_v;
@@ -81,7 +84,7 @@ const std::vector<User> odb_user::fuzzySearch(std::string str)
 
     for (result::iterator i(r.begin()); i != r.end(); ++i)
     {
-        User user(i->Account(), "±£ÃÜ", i->UserName(), i->UserNamePinyin());
+        User user(i->Account(), "ä¿å¯†", i->UserName(), i->UserNamePinyin());
         user_v.push_back(user);
     }
     return user_v;

@@ -1,4 +1,4 @@
-#ifndef SERVERSOCKET_H
+ï»¿#ifndef SERVERSOCKET_H
 #define SERVERSOCKET_H
 
 #include <QTcpServer>
@@ -31,17 +31,17 @@ private:
     void getPort(quint32& port1, quint32& port2);
 
 private:
-    ///< ¶Ë¿ÚºÅ
+    ///< ç«¯å£å·
     quint16 m_port;
-    ///< »¥³âËø
+    ///< äº’æ–¥é”
     QMutex *m_mutex;
-    ///< Ïß³ÌÁ´±í
+    ///< çº¿ç¨‹é“¾è¡¨
     QList<ServerThread*> m_threads;
-    ///< Ïß³ÌÓëÓÃ»§Ãû¶ÔÓ¦¹þÏ£±í
+    ///< çº¿ç¨‹ä¸Žç”¨æˆ·åå¯¹åº”å“ˆå¸Œè¡¨
     QHash<QString, ServerThread*> m_userHash;
-    ///< Ïß³Ì±àºÅ
+    ///< çº¿ç¨‹ç¼–å·
     static quint32 thrd_fd_;
-    ///< ¶Ë¿ÚÊý
+    ///< ç«¯å£æ•°
     static quint32 port_fd_;
 };
 

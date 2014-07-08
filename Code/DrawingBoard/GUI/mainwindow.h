@@ -1,8 +1,8 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QWidget>
+#include <QMainWindow>
+#include <QWidget>
 
 #include "shape.h"
 #include "paintwidget.h"

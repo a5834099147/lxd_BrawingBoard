@@ -1,7 +1,9 @@
-#include "ComDataTypeFactory.h"
+ï»¿#include "ComDataTypeFactory.h"
 
 #include "LogManager.h"
 
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 ComDataTypeFactory::ComDataTypeFactory(void)
 {
@@ -20,61 +22,61 @@ ComDataType* ComDataTypeFactory::createComData( MsgType msgType )
     {
     case MT_LANDING_DATA:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öµÇÂ½ÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªç™»é™†æ¶ˆæ¯");
             comDataType = new LandingDataType();
             break;
         }
     case MT_LANDING_RESULT:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öµÇÂ½½á¹ûÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªç™»é™†ç»“æžœæ¶ˆæ¯");
             comDataType = new LandingResultType();
             break;
         }
     case MT_REGISTER_DATA:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸ö×¢²áÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªæ³¨å†Œæ¶ˆæ¯");
             comDataType = new RegisterDataType();
             break;
         }
     case MT_REGISTER_RESULT:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸ö×¢²á½á¹ûÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªæ³¨å†Œç»“æžœæ¶ˆæ¯");
             comDataType = new RegisterResultType();
             break;
         }
     case MT_RETURNTHELIST_DATA:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÁÐ±íÐÅÏ¢ÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªåˆ—è¡¨ä¿¡æ¯æ¶ˆæ¯");
             comDataType = new ReturnTheListDataType();
             break;
         }
     case MT_SENDMESSAGE_MESSAGE:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸ö»á»°ÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªä¼šè¯æ¶ˆæ¯");
             comDataType = new SandMessageType();
             break;
         }
     case MT_CHATREQUESTS_DATA:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÁÄÌìÇëÇóÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªèŠå¤©è¯·æ±‚æ¶ˆæ¯");
             comDataType = new ChatRequestDataType();
             break;
         }
     case MT_CHATREQUESTS_RESULT:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸öÁÄÌìÇëÇó½á¹ûÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªèŠå¤©è¯·æ±‚ç»“æžœæ¶ˆæ¯");
             comDataType = new ChatRequestResultType();
             break;
         }
     case MT_OPENCHATSPORT:
         {
-            LogManager::getSingleton().logDebug("´´½¨Ò»¸ö¿ªÊ¼ÁÄÌìÏûÏ¢");
+            LogManager::getSingleton().logDebug("åˆ›å»ºä¸€ä¸ªå¼€å§‹èŠå¤©æ¶ˆæ¯");
             comDataType = new OpenChatsPort();
             break;
         }
     default:
         {
-            LogManager::getSingleton().logError("³öÏÖ·Ç·¨´´½¨ÏûÏ¢");
+            LogManager::getSingleton().logError("å‡ºçŽ°éžæ³•åˆ›å»ºæ¶ˆæ¯");
             assert(false);
         }
     }

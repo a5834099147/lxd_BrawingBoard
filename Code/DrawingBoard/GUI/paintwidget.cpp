@@ -1,9 +1,13 @@
 ﻿#include "paintwidget.h"
 
-#include <QtGui/QColorDialog>
+#include <QColorDialog>
+#include <QMessageBox>
+#include <QApplication>
 #include "LogManager.h"
 #include "GraphFactory.h"
 
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
 
 const int PaintWidget::symbol = 1311515;
 
@@ -139,7 +143,7 @@ bool PaintWidget::readFile(const QString &fileName)
             m_shape = new Points;
         } else if (className == QString("R_oundRect"))
         {
-            m_shape = new RoundRect;
+            m_shape = new FilletRect;
         } else if (className == QString("Rect"))
         {
             m_shape = new Rect;

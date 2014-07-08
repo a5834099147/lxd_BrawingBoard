@@ -1,11 +1,11 @@
-#ifndef __Log_H__
+ï»¿#ifndef __Log_H__
 #define __Log_H__
 
 #include <log4cpp/Priority.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 
-// ¸ù¾İlog4cppµÄ¼¶±ğÖØĞÂ¶¨ÒåÏûÏ¢¼¶±ğ
+// æ ¹æ®log4cppçš„çº§åˆ«é‡æ–°å®šä¹‰æ¶ˆæ¯çº§åˆ«
 enum LogMessageLevel
 {
     LML_EMERG = log4cpp::Priority::EMERG,
@@ -20,27 +20,27 @@ enum LogMessageLevel
     LML_NOTSET = log4cpp::Priority::NOTSET
 };
 
-/// Êä³öÈÕÖ¾µ½±ê×¼Êä³ö»òÎÄ¼ş
+/// è¾“å‡ºæ—¥å¿—åˆ°æ ‡å‡†è¾“å‡ºæˆ–æ–‡ä»¶
 class Log
 {
 public:
-    /// ¹¹½¨º¯Êı
+    /// æ„å»ºå‡½æ•°
     Log(const std::string& name, log4cpp::Category& c);
 
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     virtual ~Log(){};
 
 public:
-    /// »ñÈ¡Ãû³Æ
+    /// è·å–åç§°
     std::string getLogName();
 
-    /// ÉèÖÃÏûÏ¢¼¶±ğ
+    /// è®¾ç½®æ¶ˆæ¯çº§åˆ«
     void setMessageLevel(LogMessageLevel level);
 
-    /// »ñÈ¡ÏûÏ¢¼¶±ğ
+    /// è·å–æ¶ˆæ¯çº§åˆ«
     LogMessageLevel getMessageLevel();
 
-    /// Êä³öÏûÏ¢
+    /// è¾“å‡ºæ¶ˆæ¯
     void logMessage(const std::string& messge, LogMessageLevel level = LML_DEBUG);
 
 protected:

@@ -1,4 +1,4 @@
-#ifndef _CHATDATATYPE_H__
+﻿#ifndef _CHATDATATYPE_H__
 #define _CHATDATATYPE_H__
 
 #include "common.h"

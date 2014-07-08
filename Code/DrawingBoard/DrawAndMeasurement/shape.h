@@ -1,8 +1,8 @@
-#ifndef SHAPE_H
+﻿#ifndef SHAPE_H
 #define SHAPE_H
 
 #include <QObject>
-#include <QtGui/QtGui>
+#include <QtGui>
 #include <QDataStream>
 
 class Shape : public QObject

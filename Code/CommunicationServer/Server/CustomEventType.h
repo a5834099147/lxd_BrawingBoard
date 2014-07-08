@@ -1,4 +1,4 @@
-#include <QEvent>
+﻿#include <QEvent>
 #include <QString>
 
 class CustomEventType : public QEvent

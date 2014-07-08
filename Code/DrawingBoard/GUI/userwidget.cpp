@@ -12,7 +12,10 @@
 #include <QVBoxLayout>
 #include <string>
 #include <QLabel>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
+
+///< UTF-8编码设置, 可以用来显示中文乱码问题, 前提是文档的编码格式为UTF-8
+#pragma execution_character_set("utf-8")
 
 using namespace libxl;
 
@@ -159,6 +162,7 @@ void UserWidget::on_exportB_clicked()
 
 void UserWidget::on_importB_clicked()
 {
+#if 0
     Book* book = xlCreateBook();
     if (book)
     {
@@ -205,6 +209,7 @@ void UserWidget::on_importB_clicked()
         book->release();
     }
     /*list_Change(odb_user::export());*/
+#endif
 }
 
 void UserWidget::changeUsbState(QString usbState)

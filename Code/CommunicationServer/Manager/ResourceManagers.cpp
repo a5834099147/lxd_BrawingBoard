@@ -1,11 +1,14 @@
-#include "ResourceManagers.h"
+ï»¿#include "ResourceManagers.h"
 #include "LogManager.h"
 #include "PathManager.h"
 
-///< ×ÊÔ´ÀàÊµÌå, ½«Ê¹ÓÃ·¶Î§ÏÖÔÚÔÚ±¾ÎÄ¼þÄÚ
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
+
+///< èµ„æºç±»å®žä½“, å°†ä½¿ç”¨èŒƒå›´çŽ°åœ¨åœ¨æœ¬æ–‡ä»¶å†…
 static ResourceManagers resourceManagers;
 
-///< ³õÊ¼»¯ static ÀàÐÍÖ¸Õë
+///< åˆå§‹åŒ– static ç±»åž‹æŒ‡é’ˆ
 template<> ResourceManagers* Singleton<ResourceManagers>::m_Singleton = 0;
 
 ResourceManagers::ResourceManagers(void)
@@ -21,7 +24,7 @@ ResourceManagers::~ResourceManagers(void)
     delete m_logManager;
     delete m_pathManager;
 
-    ///< ÊÍ·ÅÀà¿Õ¼äºó½«Ö¸ÕëÖÃÎªNULL
+    ///< é‡Šæ”¾ç±»ç©ºé—´åŽå°†æŒ‡é’ˆç½®ä¸ºNULL
     m_logManager = NULL;
     m_pathManager = NULL;
 }
@@ -49,6 +52,6 @@ bool ResourceManagers::initiateResources()
         return false;
     }
 
-    LogManager::getSingleton().logDebug("·þÎñÆ÷¿ªÆô");
+    LogManager::getSingleton().logDebug("æœåŠ¡å™¨å¼€å¯");
     return true;
 }

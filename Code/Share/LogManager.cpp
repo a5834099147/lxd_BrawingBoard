@@ -1,6 +1,10 @@
-#include <assert.h>
+ï»¿#include <assert.h>
 
 #include "LogManager.h"
+#include "Utility.h"
+
+///< UTF-8ç¼–ç è®¾ç½®, å¯ä»¥ç”¨æ¥æ˜¾ç¤ºä¸­æ–‡ä¹±ç é—®é¢˜, å‰ææ˜¯æ–‡æ¡£çš„ç¼–ç æ ¼å¼ä¸ºUTF-8
+#pragma execution_character_set("utf-8")
 
 template<> LogManager* Singleton<LogManager>::m_Singleton = 0;
 LogManager::LogManager()
@@ -28,11 +32,14 @@ LogManager* LogManager::getSingletonPtr()
 bool LogManager::createLog( std::string propertyFile )
 {
     try{
-        // ¼ÓÔØlogÅäÖÃÎÄ¼ş
+        // æ£€æŸ¥é…ç½®æ–‡ä»¶æ˜¯å¦å­˜åœ¨
+        assert(isFileExist(propertyFile));
+
+        // åŠ è½½logé…ç½®æ–‡ä»¶
         log4cpp::PropertyConfigurator::configure(propertyFile);
 
-        // ½âÎöÅäÖÃÎÄ¼şCategory
-        // getCurrentCategories·µ»ØµÄÖ¸ÕëÈç¹û²»É¾³ı»áÔì³ÉÄÚ´æĞ¹Â¶
+        // è§£æé…ç½®æ–‡ä»¶Category
+        // getCurrentCategoriesè¿”å›çš„æŒ‡é’ˆå¦‚æœä¸åˆ é™¤ä¼šé€ æˆå†…å­˜æ³„éœ²
         boost::shared_ptr<std::vector<log4cpp::Category*> >ret(log4cpp::Category::getCurrentCategories());
         // std::vector<log4cpp::Category*>* ret = log4cpp::Category::getCurrentCategories();
         std::vector<log4cpp::Category*>::iterator itor = ret->begin();
