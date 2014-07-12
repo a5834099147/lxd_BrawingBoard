@@ -16,6 +16,7 @@
 
 class LogManager;
 class PathManager;
+class OdbManager;
 
 class ResourceManagers : public Singleton<ResourceManagers>
 {
@@ -42,6 +43,8 @@ protected:
     LogManager* m_logManager;
     ///< 地址类实体指针
     PathManager* m_pathManager;
+	///< 数据库类实体指针
+	OdbManager* m_odbManager;
 };
 
 #endif __RESOURCEMANAGERS_H__

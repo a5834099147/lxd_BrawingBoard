@@ -26,6 +26,9 @@ public:
     ///< 获取服务器工作区日志配置文件路径
     std::string getCommunicationLogComfigFile();
 
+	///< 获取数据库文件路径
+	std::string getOdbFile();
+
 private:
     ///< 获取配置文件路径
     std::string getConfigurePath();

@@ -17,7 +17,8 @@
     <ClCompile Include="..\Share\LogManager.cpp" />
     <ClCompile Include="..\Share\PathManager.cpp" />
     <ClCompile Include="..\Share\Utility.cpp" />
-    <ClCompile Include="Data\odb_user.cpp" />
+    <ClCompile Include="Data\OdbManager.cpp" />
+    <ClCompile Include="Data\OperUserTable.cpp" />
     <ClCompile Include="Data\user-odb.cxx" />
     <ClCompile Include="GeneratedFiles\Debug\moc_connectsocket.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -54,7 +55,8 @@
     <ClInclude Include="..\Share\Singleton.h" />
     <ClInclude Include="..\Share\SmartPointer.h" />
     <ClInclude Include="..\Share\Utility.h" />
-    <ClInclude Include="Data\odb_user.h" />
+    <ClInclude Include="Data\OdbManager.h" />
+    <ClInclude Include="Data\OperUserTable.h" />
     <ClInclude Include="Data\user-odb.hxx" />
     <ClInclude Include="Data\user.hxx" />
     <ClInclude Include="Manager\ResourceManagers.h" />
@@ -101,7 +103,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

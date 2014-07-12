@@ -75,7 +75,7 @@ String stringReplace( String& str, const String& regex, const String& rep )
 
 void analysisStringArray( int *arr, int len, const char* buffer )
 {
-    size_t count = 0;
+    int count = 0;
     const char* ptr = buffer;
 
     while (count < len) {

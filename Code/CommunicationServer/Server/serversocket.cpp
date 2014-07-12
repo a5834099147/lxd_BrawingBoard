@@ -37,13 +37,13 @@ bool ServerSocket::start()
     ///< 开启服务, 调用监听
     if (!listen(QHostAddress::Any, m_port))
     {
-        LogManager::getSingleton().logAlert("系统调用监听失败");
-        LogManager::getSingleton().logDebug("失败原因:" + errorString().toStdString());
+        LogManager::getSingleton().logAlert("Listening for alerts.");
+        LogManager::getSingleton().logDebug("File result: " + errorString().toStdString() + ".");
         return false;
     }
     else 
     {
-        LogManager::getSingleton().logDebug("系统调用监听成功");
+        LogManager::getSingleton().logDebug("Listening success.");
         return true;
     }
 }
@@ -67,7 +67,7 @@ void ServerSocket::incomingConnection(int sockfd)
     m_mutex->unlock();
 
     ///< 开启线程
-    LogManager::getSingleton().logDebug("新作业线程开启");
+    LogManager::getSingleton().logDebug("Open a new thread.");
     thrd->start();
 }
 
@@ -79,8 +79,8 @@ void ServerSocket::thrdExiting(quint32 thrdfd)
     {
         if (m_threads.at(i)->getThrdfd() == thrdfd)
         {
-            LogManager::getSingleton().logDebug("删除现有第 " + 
-                        boost::lexical_cast<std::string>(i + 1) + "个线程");
+            LogManager::getSingleton().logDebug("Delete thread, thread order is  " + 
+                        boost::lexical_cast<std::string>(i + 1) + ".");
             m_threads.removeAt(i);
             break;
         }
@@ -101,7 +101,7 @@ void ServerSocket::logout( quint32 thrdfd )
         {
             targetThred = iter.value();
             targetUser = iter.key();
-            LogManager::getSingleton().logDebug("找到登出的用户线程, 用户名为: " +
+            LogManager::getSingleton().logDebug("Found the out thread , account is: " +
                                                 targetUser.toStdString());
             m_userHash.remove(iter.key());
         }
@@ -110,7 +110,7 @@ void ServerSocket::logout( quint32 thrdfd )
 
     if (targetThred == NULL)
     {
-        LogManager::getSingleton().logWarn("出现没有登陆的用户退出系统");
+        LogManager::getSingleton().logWarn("Found not Login but exit thread");
         return;
     }
 
@@ -131,7 +131,7 @@ void ServerSocket::login( const QString& userName )
     assert(-1 != m_threads.indexOf(thread));
     m_mutex->unlock(); 
 
-    LogManager::getSingleton().logDebug("主线程获得登陆信息,用户名为: " + 
+    LogManager::getSingleton().logDebug("Main thread recive login message, account is : " + 
                                         userName.toStdString());
     m_mutex->lock();
     m_userHash.insert(userName, thread);
@@ -167,20 +167,20 @@ void ServerSocket::chatRequest( const QString& account )
 
     if (requestAccount == "")
     {
-        LogManager::getSingleton().logAlert("主线程获得聊天请求, 但是无法确认发送请求的用户名");
+        LogManager::getSingleton().logAlert("Main thread recived chat request, but not found request account.");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("主线程获得聊天请求, 申请用户名为: " + 
-        requestAccount.toStdString());
+    LogManager::getSingleton().logDebug("Main thread recived chat request, request account is : " + 
+        requestAccount.toStdString() + ".");
     m_mutex->lock();
     ServerThread* targetThread = m_userHash.value(account, NULL);
     m_mutex->unlock();
 
     if (NULL == targetThread)
     {
-        LogManager::getSingleton().logAlert("主线程获得聊天请求, 但是无法确认" 
-                    + account.toStdString() + "对方的套接字线程");
+        LogManager::getSingleton().logAlert("Main thread recived chat request, but not found " 
+                    + account.toStdString() + " socket thread.");
         assert(false);
     }
 
@@ -199,20 +199,20 @@ void ServerSocket::chatRequestResult( const QString& account, bool result )
 
     if (requestAccount == "")
     {
-        LogManager::getSingleton().logAlert("主线程获得聊天结果发送请求, 但是无法确认发送请求的用户名");
+        LogManager::getSingleton().logAlert("Main thread recived chat request result, but not found request account.");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("主线程获得聊天结果发送请求, 申请用户名为: " + 
-        requestAccount.toStdString());
+    LogManager::getSingleton().logDebug("Main thread recived chat request result, request account is : " + 
+        requestAccount.toStdString() + ".");
     m_mutex->lock();
     ServerThread* targetThread = m_userHash.value(account, NULL);
     m_mutex->unlock();
 
     if (NULL == targetThread)
     {
-        LogManager::getSingleton().logAlert("主线程获得聊天结果发送请求, 但是无法确认" 
-            + account.toStdString() + "对方的套接字线程");
+        LogManager::getSingleton().logAlert("Main thread recived chat request result, but not found account " 
+            + account.toStdString() + " socket thread." );
         assert(false);
     }
 

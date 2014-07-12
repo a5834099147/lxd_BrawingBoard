@@ -16,9 +16,9 @@ public:
     ~ConnectSocket();
 
 public:
-    void updataTheList(QString& account, bool state);
-    void sendChatRequest(QString& account);
-    void sendRequestChatRequest(QString& account, bool result);
+    void updataTheList(const QString& account, bool state);
+    void sendChatRequest(const QString& account);
+    void sendRequestChatRequest(const QString& account, bool result);
     QString getPeerAddress();
     void sendOpenChatPort(QString userName, QString targAddress, 
         quint32 localPort, quint32 targPort);

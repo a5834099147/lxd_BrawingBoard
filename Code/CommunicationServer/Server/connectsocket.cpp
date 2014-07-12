@@ -1,7 +1,7 @@
 ﻿#include "connectsocket.h"
 #include "ComDataType.h"
-#include "odb_user.h"
 #include "LogManager.h"
+#include "OdbManager.h"
 
 #include <boost/lexical_cast.hpp>
 #include <cassert>
@@ -15,7 +15,9 @@
 ConnectSocket::ConnectSocket(QObject *parent)
     : QTcpSocket(parent)
 {
+	///< 给收消息绑定信号/槽
     connect(this, SIGNAL(readyRead()), this, SLOT(receiveData()));
+	///< 给关闭连接绑定信号/槽
     connect(this, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 }
 
@@ -28,7 +30,7 @@ void ConnectSocket::receiveData()
 {
 
     ///< 接受消息
-    LogManager::getSingleton().logDebug("服务器准备接收数据");
+    LogManager::getSingleton().logDebug("Server Ready to accept data.");
 
     ///< 设置流为只读
     QDataStream receive(this);
@@ -39,16 +41,18 @@ void ConnectSocket::receiveData()
     qint32 reciveSize = 0;
     receive >> reciveSize;
 
-    LogManager::getSingleton().logDebug("收到服务器发来信息, 封装时数据大小为: " +
-        boost::lexical_cast<std::string>(reciveSize));
+    LogManager::getSingleton().logDebug("Receive data, data size is : " +
+        boost::lexical_cast<std::string>(reciveSize) + ".");
 
     ///< 读取消息类型
     MsgType msgType;
     receive >> (qint32&)msgType;
 
     ComDataType* com = comDataFactory.createComData(msgType);
+	///< 读取实体信息
     com->setData(receive);
 
+	///< 根据消息种类, 分配给不同的处理函数
     receiveDataProcessing(msgType, com);
 }
 
@@ -60,19 +64,24 @@ void ConnectSocket::requestLandingData(ComDataType* data)
     ///< 判断是否发生转换异常
     if (NULL == landingData)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
-    bool result = odb_user::logon(landingData->getAccount().toStdString(), 
-                                  landingData->getPassword().toStdString());	
+	///< 在数据库中查询登陆结果
+	bool result = OdbManager::getSingleton().logon(landingData->getAccount().toStdString(),
+		landingData->getPassword().toStdString());		
+		
+	///< 发送登陆结果给客户机
     sandLogin_result(landingData->getAccount(), result);
 
     if (result)
     {
+		///< 发送登陆成功信号给主线程
         emit login(landingData->getAccount());
     }
 
+	///< 删除该信息
     delete data;
     data = NULL;
 }
@@ -95,16 +104,20 @@ void ConnectSocket::requestRegister(ComDataType* data)
     ///< 判断是否发生转换异常
     if (NULL == registerData)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
-    bool isOk = odb_user::registerTheUser(registerData->getAccount().toStdString(), 
-                              registerData->getPassword().toStdString(),
-                              registerData->getUserName().toStdString(),
-                              registerData->getSpelling().toStdString());
+	///< 向数据库中加入该条注册信息, 并返回结果
+	bool isOk = OdbManager::getSingleton().Register(registerData->getAccount().toStdString(),
+		registerData->getPassword().toStdString(),
+		registerData->getUserName().toStdString(),
+		registerData->getSpelling().toStdString());		
+		
+	///< 发送注册信息给客户机
     sandRigister_result(isOk);
 
+	///< 删除该消息
     delete data;
     data = NULL;
 }
@@ -121,23 +134,24 @@ void ConnectSocket::sandLogin_result(const QString& userAccount, bool result)
     ///< 判断是否发生转换异常
     if (NULL == landingResult)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
     
+	///< 设置登录结果及用户名
     landingResult->setResult(result);
     landingResult->setAccount(userAccount);
 
+	///< 发送登陆结果
     sandData(com);
 
     if (result)
     {
-        LogManager::getSingleton().logDebug("登陆机地址为: " + 
-                    peerAddress().toString().toStdString() + "端口为: " + 
+        LogManager::getSingleton().logDebug("Customer IP address : " + 
+                    peerAddress().toString().toStdString() + ", Port is : " + 
                     boost::lexical_cast<std::string>(peerPort()));
-        LogManager::getSingleton().logDebug("服务器地址为: " + 
-            localAddress().toString().toStdString() + "端口为: " + 
-            boost::lexical_cast<std::string>(localPort()));
+
+		///< 将用户列表发给该用户
         requestUserList();
     }
 }
@@ -159,18 +173,21 @@ void ConnectSocket::sandRigister_result(bool reslut)
     ///< 判断是否发生转换异常
     if (NULL == registerResult)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
+	///< 设置注册结果信息
     registerResult->setResult(reslut);
-
+	
+	///< 发送数据
     sandData(com);
 }
 
 void ConnectSocket::requestUserList()
 {
-    std::vector<User> user_v = odb_user::detrainment();
+	std::vector<User> user_v = OdbManager::getSingleton().detrainment();
+
     for (std::vector<User>::iterator it = user_v.begin(); it != user_v.end(); ++it)
     {
         sandUserList(it->Account(), it->UserName(), it->UserNamePinyin(), false, false);
@@ -190,10 +207,11 @@ void ConnectSocket::sandUserList(std::string account, std::string userName,
     ///< 判断是否发生转换异常
     if (NULL == returnTheListData)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
+	///< 设置更新列表内容
     returnTheListData->setAccount(account.c_str());
     returnTheListData->setUserName(userName.c_str());
     returnTheListData->setSpelling(userPinyin.c_str());
@@ -204,7 +222,7 @@ void ConnectSocket::sandUserList(std::string account, std::string userName,
 }
 
 
-void ConnectSocket::sendChatRequest( QString& account )
+void ConnectSocket::sendChatRequest( const QString& account )
 {
     ///< 创建信息注册实体
     ComDataType* com = comDataFactory.createComData(MT_CHATREQUESTS_DATA);
@@ -215,10 +233,11 @@ void ConnectSocket::sendChatRequest( QString& account )
     ///< 判断是否发生转换异常
     if (NULL == chatRequestData)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
+	///< 设置对话请求内容
     chatRequestData->setAccount(account);
 
     sandData(com);
@@ -237,10 +256,11 @@ void ConnectSocket::sendOpenChatPort( QString userName, QString targAddress,
     ///< 判断是否发生转换异常
     if (NULL == openChatsPort)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
+	///< 设置打开聊天端口内容
     openChatsPort->setUserName(userName);
     openChatsPort->setAddress(targAddress);
     openChatsPort->setLocalPort(localPort);
@@ -250,7 +270,7 @@ void ConnectSocket::sendOpenChatPort( QString userName, QString targAddress,
 }
 
 
-void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
+void ConnectSocket::sendRequestChatRequest( const QString& account, bool result )
 {
 
     ///< 创建信息注册实体
@@ -262,10 +282,11 @@ void ConnectSocket::sendRequestChatRequest( QString& account, bool result )
     ///< 判断是否发生转换异常
     if (NULL == chatRequestResult)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail");
         assert(false);
     }
 
+	///< 设置聊天请求结果消息内容
     chatRequestResult->setAccount(account);
     chatRequestResult->setResult(result);
 
@@ -290,17 +311,17 @@ void ConnectSocket::sandData(ComDataType* data)
     ///< 重置字节流长度
     sand << (qint32)(block.size() - sizeof(qint32));
 
-    LogManager::getSingleton().logDebug("准备发送数据: 数据大小为: " + 
-    boost::lexical_cast<std::string>(block.size()));
+    LogManager::getSingleton().logDebug("Ready to send data, data size is " + 
+    boost::lexical_cast<std::string>(block.size()) + " .");
 
     int sandSize = write(block);
 
-    LogManager::getSingleton().logDebug("发送数据进入缓冲区: 数据大小为: " + 
-    boost::lexical_cast<std::string>(sandSize));
+    LogManager::getSingleton().logDebug("Sand data into the buffer, buffer size is : " + 
+    boost::lexical_cast<std::string>(sandSize) + " .");
 
     waitForBytesWritten();
 
-    LogManager::getSingleton().logDebug("发送数据成功");
+    LogManager::getSingleton().logDebug("Send data success.");
 
     ///< 删除消息
     delete data;
@@ -316,11 +337,13 @@ void ConnectSocket::requestChatRequest( ComDataType* data )
     ///< 判断是否发生转换异常
     if (NULL == charRequestData)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail.");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("获得交谈请求并转发给主线程处理");
+    LogManager::getSingleton().logDebug("Receive chat request, give chatRequest func processing.");
+
+	///< 向主线程发送聊天请求
     emit chatRequest(charRequestData->getAccount());
 
     delete data;
@@ -335,11 +358,13 @@ void ConnectSocket::requestChatResult( ComDataType* data )
     ///< 判断是否发生转换异常
     if (NULL == charRequest)
     {
-        LogManager::getSingleton().logAlert("类型转换时出现错误, 产生空指针异常");
+        LogManager::getSingleton().logAlert("Type conversion fail.");
         assert(false);
     }
 
-    LogManager::getSingleton().logDebug("获得交谈请求结果并转发给主线程处理");
+    LogManager::getSingleton().logDebug("Receive char request result, give main thread processing.");
+
+	///< 向主线程发送聊天结果请求
     emit chatRequestResult(charRequest->getAccount(), charRequest->getResult());
 
     delete data;
@@ -353,52 +378,54 @@ void ConnectSocket::receiveDataProcessing( MsgType type, ComDataType* data )
     {
     case MT_LANDING_DATA:
         {
-            LogManager::getSingleton().logDebug("将收到的信息交由登陆处理函数处理");
+            LogManager::getSingleton().logDebug("Message to requestLandingData Fun processing.");
             requestLandingData(data);
             break;
         }
     case MT_SENDMESSAGE_MESSAGE:
         {
-            LogManager::getSingleton().logDebug("将收到的消息交由接受消息函数处理");
+            LogManager::getSingleton().logDebug("Message to requestSendMessage Fun processing.");
             requestSendMessage_Message(data);
             break;
         }
     case MT_SENDMESSAGE_DATA:
         {
-            LogManager::getSingleton().logDebug("将收到的消息交由接受数据函数处理");
+            LogManager::getSingleton().logDebug("Message to requestSendData Fun processing.");
             requestSendMessage_Data(data);
             break;
         }
     case MT_REGISTER_DATA:
         {
-            LogManager::getSingleton().logDebug("将收到的消息交由注册处理函数处理");
+            LogManager::getSingleton().logDebug("Message to requestRegister Fun processing.");
             requestRegister(data);
             break;
         }
     case MT_CHATREQUESTS_DATA:
         {
-            LogManager::getSingleton().logDebug("将收到的消息交由聊天请求处理函数处理");
+            LogManager::getSingleton().logDebug("Message to requestChatRequest Fun processing.");
             requestChatRequest(data);
             break;
         }
     case MT_CHATREQUESTS_RESULT:
         {
-            LogManager::getSingleton().logDebug("将收到的消息交由聊天结果请求函数处理");
+            LogManager::getSingleton().logDebug("Message to requestChatResult Fun processing.");
             requestChatResult(data);
             break;
         }
     default:
         {
-            LogManager::getSingleton().logDebug("收到非法消息类型");
+            LogManager::getSingleton().logAlert("Message to Error.");
             assert(false);
         }
     }
 }
 
-void ConnectSocket::updataTheList( QString& account, bool state )
+void ConnectSocket::updataTheList( const QString& account, bool state )
 {
-    LogManager::getSingleton().logDebug("发送更新用户名:" 
-                + account.toStdString() + "的状态为" + (state ? "在线": "不在线"));
+    LogManager::getSingleton().logDebug("Updata account: " 
+                + account.toStdString() + " state " + (state ? "on line.": "off line"));
+
+	///< 更新用户列表
     sandUserList(account.toStdString(), "", "", state, true);
 }
 

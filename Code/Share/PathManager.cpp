@@ -31,11 +31,13 @@ std::string PathManager::getPlottingLogConfigFile()
 
 PathManager& PathManager::getSingleton( void )
 {
+	assert(m_Singleton);
     return *m_Singleton;
 }
 
 PathManager* PathManager::getSingletonPtr( void )
 {
+	assert(m_Singleton);
     return m_Singleton;
 }
 
@@ -43,3 +45,11 @@ std::string PathManager::getCommunicationLogComfigFile()
 {
     return getConfigurePath() + "Communicationlog.attr";
 }
+
+std::string PathManager::getOdbFile()
+{
+	return getExecuteDir() + "test.db";
+}
+
+
+78

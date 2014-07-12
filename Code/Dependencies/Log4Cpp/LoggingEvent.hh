@@ -66,6 +66,8 @@ namespace log4cpp {
         /** The number of seconds elapsed since the epoch 
             (1/1/1970 00:00:00 UTC) until logging event was created. */
         TimeStamp timeStamp;
+
+		LoggingEvent& operator=(LoggingEvent const&);
     };
 }
 

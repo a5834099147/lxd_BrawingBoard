@@ -43,6 +43,9 @@ public:
     /// 输出消息
     void logMessage(const std::string& messge, LogMessageLevel level = LML_DEBUG);
 
+private:
+	Log operator=(Log const&);
+
 protected:
     std::string m_LogName;
     log4cpp::Category& m_Category;
